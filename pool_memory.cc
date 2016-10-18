@@ -49,58 +49,63 @@ void* PoolMemoryBase::ReFill(size_t n)
 
 char* PoolMemoryBase::AllocateChunk(size_t n, int& nobjs)
 {
-
-}
-
-template <typename T>
-T* PoolMemory<T>::Allocate(size_t n)
-{
-	if (n > MaxSize())
+	char* result = nullptr;
+	size_t total_bytes = nobjs * n;
+	size_t left_bytes = end_free_ - start_free_;
+	
+	if (left_bytes > total_bytes)
 	{
-		return nullptr;
+		//内存池有足够的空间满足需求量
+		result = start_free_;
+		start_free_ += total_bytes;
+		return result;
+
 	}
-	pointer ret;
-	const size_t bytes = n * sizeof(T);
-	if (bytes > PoolMemoryBase::kMaxBytes)
+	else if (left_bytes >= n)
 	{
-		ret = static_cast<T*>(::operator new(n));
+		//内存池剩下空间不够满足全部需求量，但足够供应一个以上的区块
+		nobjs = left_bytes / n;
+		total_bytes = nobjs * n;
+		result = start_free_;
+		start_free_ += total_bytes;
+		return result;
 	}
 	else
 	{
-		//申请小区块
-		PoolMemoryBase::Obj* volatile* free_list = this->GetFreeList(bytes);
-		PoolMemoryBase::Obj* result = *free_list;
-		if (result == nullptr)
+		//内存池连一个区块的大小都无法提供
+		size_t bytes_to_get = 2 * total_bytes + RoundUp(heap_size_ >> 4);
+		if (left_bytes > 0)
 		{
-			//无可用的free_list 重新填充free_list
-			ret = static_cast<T*>(this->ReFill(this->ReFill(bytes)));
+			Obj* volatile* free_list = GetFreeList(left_bytes);
+			(reinterpret_cast<Obj*>(start_free_))->free_list_link = *free_list;
+			*free_list = reinterpret_cast<Obj*>(start_free_);
 		}
-		else
+		start_free_ = static_cast<char*>(::operator new(bytes_to_get));
+		if (start_free_ == nullptr)
 		{
-			*free_list = result->free_list_link;
-			ret = reinterpret_cast<T*>(result);
+			//heap 空间不足，new失败 调整free_list 已释放出所有未用的区块
+			size_t i = n;
+			for (; i <= kMaxBytes; i += kAlign)
+			{
+				Obj* volatile* free_list = GetFreeList(i);
+				Obj* p = *free_list;
+				if (p != nullptr)
+				{
+					*free_list = p->free_list_link;
+					start_free_ = reinterpret_cast<char*>(p);
+					end_free_ = start_free_ + i;
+					return AllocateChunk(n, nobjs);
+				}
+			}
+			
 		}
+		end_free_ = start_free_ + bytes_to_get;
+		heap_size_ = bytes_to_get;
+		return AllocateChunk(n, nobjs);
 	}
-	return nullptr;
 }
 
-template <typename T>
-void PoolMemory<T>::deallocate(pointer p, size_t n)
-{
-	if (n != 0 && p != nullptr)
-	{
-		const size_t bytes = sizeof(T) * n;
-		if (bytes > PoolMemoryBase::kMaxBytes)
-		{
-			::operator delete (p);
-		}
-		else
-		{
-			PoolMemoryBase::Obj* volatile* free_list = this->GetFreeList(bytes);
-			PoolMemoryBase::Obj* q = reinterpret_cast<PoolMemoryBase::Obj*>(p);
-			q->free_list_link = *free_list;
-			*free_list = q;
-		}
-	}
-}
+
+
+
 

@@ -38,7 +38,7 @@ protected:
 };
 
 template <typename T>
-class PoolMemory
+class PoolMemory : private PoolMemoryBase
 {
 public:
 	typedef T* pointer;
@@ -76,5 +76,58 @@ public:
 	pointer Allocate(size_t n);
 	void deallocate(pointer p, size_t n);
 };
+
+template <typename T>
+T* PoolMemory<T>::Allocate(size_t n)
+{
+	if (n > MaxSize())
+	{
+		return nullptr;
+	}
+	pointer ret;
+	const size_t bytes = n * sizeof(T);
+	if (bytes > kMaxBytes)
+	{
+		ret = static_cast<T*>(::operator new(n));
+	}
+	else
+	{
+		//申请小区块
+		Obj* volatile* free_list = GetFreeList(bytes);
+		Obj* result = *free_list;
+		if (result == nullptr)
+		{
+			//无可用的free_list 重新填充free_list
+			ret = static_cast<T*>(ReFill(RoundUp(bytes)));
+		}
+		else
+		{
+			*free_list = result->free_list_link;
+			ret = reinterpret_cast<T*>(result);
+		}
+	}
+	return ret;
+}
+
+template <typename T>
+void PoolMemory<T>::deallocate(pointer p, size_t n)
+{
+	if (n != 0 && p != nullptr)
+	{
+		const size_t bytes = sizeof(T) * n;
+		if (bytes > kMaxBytes)
+		{
+			::operator delete (p);
+		}
+		else
+		{
+			Obj* volatile* free_list = GetFreeList(bytes);
+			Obj* q = reinterpret_cast<Obj*>(p);
+			q->free_list_link = *free_list;
+			*free_list = q;
+		}
+	}
+}
+
 
 #endif
