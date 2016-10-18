@@ -193,7 +193,7 @@ void test()
 	ListIter<ListItem<int>> begin(ilist.front());
 	ListIter<ListItem<int>> end;
 	ListIter<ListItem<int>> iter;
-	iter = std::find(begin, end, 23);
+	//iter = std::find(begin, end, 23);
 }
 
 }
