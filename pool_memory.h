@@ -46,6 +46,13 @@ public:
 	typedef T& reference;
 	typedef const T& const_reference;
 	typedef T value_type;
+
+	template <typename Tp>
+	struct rebind
+	{
+		typedef PoolMemory<Tp> other;
+	};
+
 	PoolMemory() noexcept
 	{
 

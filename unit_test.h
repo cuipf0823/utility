@@ -2,6 +2,7 @@
 #define UINT_TEST_H
 #include <iostream>
 #include "pool_memory.h"
+#include "dcl_List.h"
 
 void TestPoolMemory()
 {
