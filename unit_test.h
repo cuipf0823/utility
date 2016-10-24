@@ -9,7 +9,9 @@ void TestPoolMemory()
 	const size_t kSize = 32;
 	PoolMemory<char> pool;
 	char* p_new = pool.Allocate(kSize);
-	pool.deallocate(p_new, kSize);
+	pool.Deallocate(p_new, kSize);
+
+	dcl_list::ListBase<char, PoolMemory<char>> base;
 
 }
 #endif

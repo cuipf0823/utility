@@ -75,4 +75,21 @@ void ListNodeBase::UnHook() noexcept
 	next_node->prev = prev_node;
 }
 
+
+template<typename T, typename Alloc>
+void dcl_list::ListBase<T, Alloc>::Clear()
+{
+	typedef ListNode<T> CurNode;
+	CurNode* cur = static_cast<CurNode*>(impl_.node.next);
+	while (cur != &impl_.node)
+	{
+		CurNode* tmp = cur;
+		cur = static_cast<CurNode*>(cur->next);
+		GetNodeAllocator().Destory(tmp);
+		PutNode(tmp);
+	}
+
+}
+
+
 }

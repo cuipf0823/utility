@@ -6,6 +6,7 @@
 #ifndef DCL_LIST_H
 #define DCL_LIST_H
 #include <iostream>
+#include "pool_memory.h"
 
 namespace dcl_list
 {
@@ -114,6 +115,81 @@ inline bool operator!=(const ListIterator<T>& x, const ListIterator<T>& y)
 template<typename T, typename Alloc>
 class ListBase
 {
+protected:
+	typedef typename Alloc::template rebind<ListNode<T>>::other NodeAllocType;
+	typedef typename Alloc::template rebind<T>::other T_Alloc_Type;
+	struct ListImpl: public NodeAllocType
+	{
+		ListNodeBase node;
+		ListImpl() :NodeAllocType(), node()
+		{
+
+		}
+		ListImpl(const NodeAllocType& a) :NodeAllocType(a), node()
+		{
+
+		}
+		ListImpl(NodeAllocType&& a) :NodeAllocType(std::move(a)), node()
+		{
+
+		}
+	};
+	ListImpl impl_;
+	ListNode<T>* GetNode()
+	{
+		return impl_.NodeAllocType::Allocate(1);
+	}
+
+	void PutNode(ListNode<T>* p)
+	{
+		impl_.NodeAllocType::Deallocate(p, 1);
+	}
+
+public:
+	typedef Alloc AllocatorType;
+
+	NodeAllocType& GetNodeAllocator() noexcept
+	{
+		return *static_cast<NodeAllocType*>(&impl_);
+	};
+
+	const NodeAllocType& GetNodeAllocator() const noexcept
+	{
+		return *static_cast<const NodeAllocType*>(&impl_);
+	};
+
+	T_Alloc_Type GetTAllocator() noexcept
+	{
+		return T_Alloc_Type(GetNodeAllocator());
+	}
+
+	AllocatorType GetAllocator() const noexcept
+	{
+		return AllocatorType(GetNodeAllocator());
+	}
+
+	ListBase() :impl_()
+	{
+		Init();
+	}
+
+	ListBase(const NodeAllocType& a) :impl_(a)
+	{
+		Init();
+	}
+
+	ListBase(ListBase&& x) : impl_(std::move(x.GetNodeAllocator()))
+	{
+		Init();
+	}
+
+	void Clear();
+
+	void Init()
+	{
+		this->impl_.node.next = &this->impl_.node;
+		this->impl_.node.prev = &this->impl_.node;
+	}
 
 };
 

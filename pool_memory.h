@@ -81,7 +81,7 @@ public:
 	}
 
 	pointer Allocate(size_t n);
-	void deallocate(pointer p, size_t n);
+	void Deallocate(pointer p, size_t n);
 };
 
 template <typename T>
@@ -117,7 +117,7 @@ T* PoolMemory<T>::Allocate(size_t n)
 }
 
 template <typename T>
-void PoolMemory<T>::deallocate(pointer p, size_t n)
+void PoolMemory<T>::Deallocate(pointer p, size_t n)
 {
 	if (n != 0 && p != nullptr)
 	{
