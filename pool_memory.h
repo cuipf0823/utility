@@ -95,7 +95,7 @@ T* PoolMemory<T>::Allocate(size_t n)
 	const size_t bytes = n * sizeof(T);
 	if (bytes > kMaxBytes)
 	{
-		ret = static_cast<T*>(::operator new(n));
+		ret = static_cast<T*>(::operator new(bytes));
 	}
 	else
 	{

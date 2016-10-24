@@ -193,6 +193,42 @@ public:
 
 };
 
+template<typename Tp, typename Alloc = PoolMemory<Tp>>
+class DCLList : protected ListBase < Tp, Alloc >
+{
+public:
+	typedef Tp ValueType;
+	typedef _Alloc allocator_type;
+protected:
+	typedef ListNode<Tp> Node;
+	using ListBase::impl_;
+	using ListBase::PutNode;
+	using ListBase::GetNode;
+	using ListBase::GetNodeAllocator;
+	using ListBase::GetTAllocator;
+
+	template<typename... Args>
+	Node* CreateNode(Args&&... args)
+	{
+		Node* p = this->GetNode();
+		try
+		{
+			GetNodeAllocator().Construct(p, std::forward<Args>(args)...);
+		}
+		catch (...)
+		{
+			PutNode(p);
+		}
+		return p;
+	}
+public:
+	explicit DCLList(const allocator_type& a) : ListBase(NodeAllocType(a))
+	{
+
+	}
+
+};
+
 
 
 
