@@ -45,15 +45,4 @@ void reverse_by_std(char* str, int n)
 {
 	std::reverse(str, str + n);
 }
-
-void test()
-{
-	char str[] = "12345abcdefg";
-	reverse_by_swap(str, sizeof(str) - 1);
-	cout << str << endl;
-	reverse_by_xor(str, sizeof(str) - 1);
-	cout << str << endl;
-	reverse_by_std(str, sizeof(str) - 1);
-	cout << str << endl;
-}
 #endif
