@@ -88,8 +88,16 @@ void dcl_list::ListBase<T, Alloc>::Clear()
 		GetNodeAllocator().Destory(tmp);
 		PutNode(tmp);
 	}
-
 }
 
+/*
+template<typename Tp, typename Alloc>
+typename DCLList<Tp, Alloc>::iterator DCLList<Tp, Alloc>::insert(iterator position, const ValueType& x)
+{
+	Node* tmp = CreateNode(x);
+	tmp->Hook(position.node);
+	return iterator(tmp);
+}
+*/
 
 }

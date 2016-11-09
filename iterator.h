@@ -104,7 +104,7 @@ public:
 		ListItem<T>* temp = front_;
 		while (temp != nullptr)
 		{
-			std::cout << temp->Value() << endl;
+			std::cout << temp->Value() << std::endl;
 			temp = temp->next();
 		}
 	}
@@ -167,33 +167,6 @@ template<typename T>
 bool operator != (const ListItem<T>& item, T n)
 {
 	return item.Value() != n;
-}
-
-void test()
-{
-	List<int> ilist;
-	ilist.insert_front(123);
-	ilist.insert_front(23);
-	ilist.insert_end(90);
-	ilist.display();
-
-	List<unsigned int> ulist;
-	ulist.insert_end(8920);
-	ulist.insert_front(7878);
-	ulist.insert_end(666);
-	ulist.insert_front(9090);
-	ulist.display();
-	
-	List<std::string> strlist;
-	strlist.insert_end("abc");
-	strlist.insert_end("edf");
-	strlist.insert_front("hhh");
-	strlist.display();
-
-	ListIter<ListItem<int>> begin(ilist.front());
-	ListIter<ListItem<int>> end;
-	ListIter<ListItem<int>> iter;
-	//iter = std::find(begin, end, 23);
 }
 
 }

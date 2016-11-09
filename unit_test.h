@@ -8,22 +8,28 @@
 
 void TestInterator()
 {
+	iterator_test::List<int> ilist;
 	ilist.insert_front(123);
 	ilist.insert_front(23);
 	ilist.insert_end(90);
 	ilist.display();
 
+	iterator_test::List<unsigned int> ulist;
 	ulist.insert_end(8920);
 	ulist.insert_front(7878);
 	ulist.insert_end(666);
 	ulist.insert_front(9090);
 	ulist.display();
 
+	iterator_test::List<std::string> strlist;
 	strlist.insert_end("abc");
 	strlist.insert_end("edf");
 	strlist.insert_front("hhh");
 	strlist.display();
 
+	iterator_test::ListIter<iterator_test::ListItem<int>> begin(ilist.front());
+	iterator_test::ListIter<iterator_test::ListItem<int>> end;
+	iterator_test::ListIter<iterator_test::ListItem<int>> iter;
 	//iter = std::find(begin, end, 23);
 }
 

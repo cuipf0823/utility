@@ -193,12 +193,15 @@ public:
 
 };
 
+
+/*
 template<typename Tp, typename Alloc = PoolMemory<Tp>>
 class DCLList : protected ListBase < Tp, Alloc >
 {
 public:
 	typedef Tp ValueType;
 	typedef _Alloc allocator_type;
+	typedef ListIterator<Tp> iterator;
 protected:
 	typedef ListNode<Tp> Node;
 	using ListBase::impl_;
@@ -227,17 +230,10 @@ public:
 
 	}
 
+	iterator insert(iterator position, const ValueType& x);
 };
 
-
-
-
-
-
-
-
-
-
+*/
 
 
 
