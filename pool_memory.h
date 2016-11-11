@@ -84,8 +84,13 @@ public:
 	void Deallocate(pointer p, size_t n);
 };
 
+/*
+函数定义等价于
 template <typename T>
 T* PoolMemory<T>::Allocate(size_t n)
+*/
+template <typename T>
+typename PoolMemory<T>::pointer PoolMemory<T>::Allocate(size_t n)
 {
 	if (n > MaxSize())
 	{
