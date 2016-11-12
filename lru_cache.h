@@ -9,6 +9,7 @@
 #include <assert.h>
 #include <list>
 #include <unordered_map>
+#include <iostream>
 
 namespace LRU
 {
@@ -44,7 +45,7 @@ public:
 	{
 		for (auto it : lru_)
 		{
-			Release(*it);
+			Release(it);
 		}
 	}
 	LRUCache(const LRUCache&) = delete;
@@ -61,12 +62,25 @@ public:
 	void Release(LRUHandle* handle);
 	void Erase(const Key& key);
 	void Prune();
+	void Debug();
 private:
 	size_t usage_;
 	size_t capacity_;
 	CacheList lru_;	//list 第一个元素是最近最少使用元素，最后一个元素是最新元素
 	CacheTable table_;
 };
+
+template<typename Key, typename Value>
+void LRUCache<Key, Value>::Debug()
+{
+	std::cout << "Usage :" << usage_ << std::endl;
+	std::cout << "Capacity : " << capacity_ << std::endl;
+	for (const auto& it : lru_)
+	{
+		LRUHandle* handle = it;
+		std::cout << "Key:" << handle->key << " refs: " << handle->refs << " charge: " << handle->charge << std::endl;
+	}
+}
 
 template<typename Key, typename Value>
 typename LRUCache<Key, Value>::LRUHandle* 
@@ -93,10 +107,10 @@ LRUCache<Key, Value>::Insert(const Key& key, const Value& value, size_t charge /
 	//当前容器内元素粒度大于设定值，删除最长时间未使用的元素 循环保证元素从内存清理
 	while (usage_ > capacity_ && !lru_.empty())
 	{
-		typename CacheList::iterator iter = lru_.back();
-		table_.erase(iter->key);
+		LRUHandle* handle = lru_.back();
+		table_.erase(handle->key);
 		lru_.pop_back();
-		Release(*iter);
+		Release(handle);
 	}
 	return handle;
 }
@@ -151,14 +165,14 @@ void LRUCache<Key, Value>::Prune()
 {
 	for (auto it : lru_)
 	{
-		if ((*it)->refs == 1)
+		if (it->refs == 1)
 		{
-			auto iter = table_.find((*it)->key);
+			auto iter = table_.find(it->key);
 			if (iter != table_.end())
 			{
 				table_.erase(iter);
 			}
-			Release(*it);
+			Release(it);
 		}
 	}
 }
@@ -172,7 +186,7 @@ public:
 	typedef typename LRUCache<Key, Value>::LRUHandle LRUHandle;
 	explicit SharedLRUCache(size_t capacity)
 	{
-		const size_t per_capacity = (capacity + kNumShards - 1) % kNumShards;
+		const size_t per_capacity = (capacity + kNumShards - 1) / kNumShards;
 		for (size_t idx = 0; idx < kNumShards; ++idx)
 		{
 			shard_[idx].set_capacity(per_capacity);
@@ -205,15 +219,25 @@ public:
 	}
 	void Prune()
 	{
-		for (auto idx : shard_)
+		for (auto& idx : shard_)
 		{
-			shard_[idx].Prune();
+			idx.Prune();
+		}
+	}
+	void Debug()
+	{
+		for (size_t idx = 0; idx < kNumShards; ++idx)
+		{
+			std::cout << "Shard: " << idx << endl;
+
+			shard_[idx].Debug();
+			std::cout << std::endl;
 		}
 	}
 private:
 	inline size_t HashSlice(const Key& key)
 	{
-		return std::hash<Key>(key);
+		return std::hash<Key>()(key);
 	}
 	inline size_t Shard(size_t hash)
 	{

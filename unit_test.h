@@ -5,6 +5,7 @@
 #include "dcl_List.h"
 #include "iterator.h"
 #include "functions.h"
+#include "lru_cache.h"
 
 void TestInterator()
 {
@@ -54,11 +55,37 @@ void TestRevervse()
 	std::cout << str << endl;
 }
 
+void TestLRU()
+{
+	LRU::SharedLRUCache<int, int> cache(20);
+	cache.Debug();
+	auto* handle1 = cache.Insert(100, 200);
+	auto* handle2 = cache.Insert(200, 300);
+	cache.Debug();
+	cache.Release(handle1);
+	cache.Release(handle2);
+	cache.Debug();
+	auto* handle3 = cache.Insert(100, 200);
+	auto* handle4 = cache.Insert(200, 300);
+	cache.Debug();
+	auto* finder = cache.LookUp(100);
+	std::cout << finder->value << endl;
+	cache.Release(handle3);
+	cache.Release(handle4);
+	cache.Release(finder);
+	cache.Erase(100);
+	cache.Debug();
+	//cache.Prune();
+	//cache.Debug();
+}
+
 void Test()
 {
 	TestInterator();
 	TestPoolMemory();
 	TestRevervse();
+	std::cout << "=================================" << std::endl;
+	TestLRU();
 }
 
 #endif
