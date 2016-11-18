@@ -2,6 +2,7 @@
 * least recently useds 
 * 参考leveldb中lru算法，使用stl简化lru算法的实现
 * 1. 使用list和unordered_map实现lru算法，使得查找删除效率为o(1);
+* 2. Key, Value必须是规则类型，且Key类型必须是内置类型或者重载了operator==, 且该类型必须提供std::hash<>特例化
 */
 
 #ifndef LRU_CACHE_H
