@@ -4,7 +4,7 @@
 #2. 说明：目录下面全部的*.proto文件都会生成相应的.cc和.h
 #
 # author      date         modify reason
-# cuipf     2015-07-15     create       
+# cuipf     2015-07-15     create
 ##############################################################
 
 SRC_DIR=./
