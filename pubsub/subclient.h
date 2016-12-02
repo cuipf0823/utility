@@ -6,6 +6,7 @@
 #include <boost/smart_ptr.hpp>
 #include "proto/pubsub.pb.h"
 #include "dispatcher.h"
+#include "codec/codec.h"
 
 namespace sub
 {
@@ -14,13 +15,19 @@ class SubClient : boost::noncopyable
 public:
 	SubClient(muduo::net::EventLoop* loop, const muduo::net::InetAddress& address);
 	~SubClient();
+	void Connect();
+	void Disconnect();
 
 private:
 	void Register();
 	void OnConnection(const muduo::net::TcpConnectionPtr& con);
-	void OnMessage(const muduo::net::TcpConnectionPtr& con, const muduo::net::Buffer* buffer, muduo::Timestamp time);
+	void OnMessage(const muduo::net::TcpConnectionPtr& con, muduo::net::Buffer* buffer, muduo::Timestamp time);
 	void OnWriteComplete(const muduo::net::TcpConnectionPtr& con);
 	void OnUnkownMsgType(const muduo::net::TcpConnectionPtr& con, const MessagePtr& msg, muduo::Timestamp time);
+
+	//消息解析回调
+	void ParseProtobufMessage(const muduo::net::TcpConnectionPtr& con, const MessagePtr& msg, muduo::Timestamp time);
+	
 
 	//消息相关处理
 	typedef boost::shared_ptr<pubsub::CSSubscribeTopicRsp> SubTopicRspPtr;
@@ -33,6 +40,7 @@ private:
 private:
 	muduo::net::TcpClient client_;
 	ProtobufDispatcher dispatcher_;
+	ProtobufCodec codec_;
 };
 
 }
