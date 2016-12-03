@@ -3,6 +3,7 @@
 #include <muduo/base/LogFile.h>
 #include <muduo/base/Logging.h>
 #include <muduo/net/EventLoopThread.h>
+#include <muduo/base/CurrentThread.h>
 #include "subclient.h"
 
 static const int kPort = 8989;
@@ -39,8 +40,13 @@ int main(int argc, char *argv[])
 	std::string line;
 	while (std::getline(std::cin, line))
 	{
-		LOG_DEBUG << line;
+		if (!client.ParseCmd(line))
+		{
+			LOG_ERROR << "failed find cmd";
+		}
+		
 	}
-	getchar();
+	client.Disconnect();
+	muduo::CurrentThread::sleepUsec(1000 * 1000);
 	return 0;
 }

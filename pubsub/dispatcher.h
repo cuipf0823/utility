@@ -1,3 +1,11 @@
+// Copyright 2011, Shuo Chen.  All rights reserved.
+// http://code.google.com/p/muduo/
+//
+// Use of this source code is governed by a BSD-style license
+// that can be found in the License file.
+//
+// Author: Shuo Chen (chenshuo at chenshuo dot com)
+
 #ifndef MUDUO_EXAMPLES_PROTOBUF_CODEC_DISPATCHER_H
 #define MUDUO_EXAMPLES_PROTOBUF_CODEC_DISPATCHER_H
 
@@ -98,3 +106,4 @@ class ProtobufDispatcher
   ProtobufMessageCallback defaultCallback_;
 };
 #endif  // MUDUO_EXAMPLES_PROTOBUF_CODEC_DISPATCHER_H
+

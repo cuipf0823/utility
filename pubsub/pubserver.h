@@ -1,5 +1,6 @@
 #ifndef PUB_SERVER_H
 #define PUB_SERVER_H
+#include <set>
 #include <muduo/net/EventLoop.h>
 #include <muduo/net/TcpServer.h>
 #include <boost/noncopyable.hpp>
@@ -11,6 +12,7 @@
 namespace pub
 {
 
+class Topic;
 class PubServer : boost::noncopyable
 {
 public:
@@ -37,9 +39,19 @@ private:
 	void PublishTopicReq(const muduo::net::TcpConnectionPtr& con, const PubTopicReqPtr& msg, muduo::Timestamp time);
 
 private:
+	typedef std::set<std::string>  SubTopics;
+	typedef std::set<muduo::net::TcpConnectionPtr> ConnectsList;
+	typedef std::map<std::string, Topic*> Topics;
+
 	muduo::net::TcpServer server_;
 	ProtobufDispatcher dispatcher_;
 	ProtobufCodec codec_;
+	ConnectsList connections_;
+	//当前连接数
+	uint32_t numConnected_;
+	static const uint32_t kMaxConntions_ = 1000;
+	Topics topics_;
+	
 };
 
 }
