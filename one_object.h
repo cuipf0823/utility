@@ -66,7 +66,7 @@ namespace PrintingStuff
 	}
 }
 
-//方法4：限制创建对象的个数，过多直接抛出异常
+//方法4：限制创建对象的个数，过多直接抛出异常 该方法不可取
 class PrinterToo
 {
 public:
@@ -90,12 +90,107 @@ private:
 	static size_t num_objects_;
 
 };
-
 size_t PrinterToo::num_objects_ = 0;
-
 }
 
 
+//方法5：由于方法4继承，构造都可能产生对象，可能和我们理解的“对象数目”不一致 优化如下
+class PrinterMake
+{
+public:
+	class TooManyObjects(){};
+	//伪构造函数
+	static PrinterMake* MakePrinter();
+	static PrinterMake* MakePrinter(const PrinterMake& rhs);
+private:
+	PrinterMake()
+	{
+		if (num_objects_ >= max_objects_)
+		{
+			throw TooManyObjects();
+		}
+	};
+	~PrinterMake(){};
+	PrinterMake(const PrinterMake& rhs)
+	{
+		if (num_objects_ >= max_objects_)
+		{
+			throw TooManyObjects();
+		}
+	}
+	static size_t num_objects_;
+	static const size_t max_objects_ = 10;
+};
+
+const size_t PrinterMake::max_objects_;
+size_t PrinterMake::num_objects_ = 0;
+
+PrinterMake* PrinterMake::MakePrinter()
+{
+	return new PrinterMake();
+}
+
+PrinterMake* PrinterMake::MakePrinter(const PrinterMake& rhs)
+{
+	return new PrinterMake(rhs);
+}
+
+//方法6：封装具有实例计数功能的基类；
+template<class BeingCounted>
+class Counted
+{
+public:
+	class TooManyObjects{};
+	static int ObjectCount()
+	{ 
+		return num_objects_; 
+	}
+protected:
+	Counted();
+	virtual ~Counted()
+	{
+		--num_objects_;
+	}
+	Counted(const Counted& rhs);
+private:
+	static int num_objects_;
+	static const size_t max_objects_;
+	void init();				      //避免构造函数的
+};
+template<class BeingCounted>
+Counted<BeingCounted>::Counted()
+{
+	init();
+}
+template<class BeingCounted>
+Counted<BeingCounted>::Counted(const Counted<BeingCounted>&)
+{
+	init();
+}
+template<class BeingCounted>
+void Counted<BeingCounted>::init()
+{
+	if (num_objects_ >= max_objects_)
+	{
+		throw TooManyObjects();
+	}
+	++num_objects_;
+}
+
+//直接继承即可有实例计数功能
+class Printer : private Counted < Printer >
+{
+public:
+	// 伪构造函数
+	static Printer * makePrinter();
+	static Printer * makePrinter(const Printer& rhs);
+	~Printer();
+	using Counted<Printer>::TooManyObjects;
+	using Counted<Printer>::TooManyObjects;
+private:
+	Printer();
+	Printer(const Printer& rhs);
+}
 
 
 #endif
