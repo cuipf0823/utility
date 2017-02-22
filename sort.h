@@ -38,8 +38,8 @@ void  BubbleSort(int* a, int len)
 	}
 }
 
-//Ö±ï¿½Ó²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã·¨ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ëµ½ï¿½Ñ¾ï¿½ï¿½Åºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ£ï¿½ï¿½Ó¶ï¿½ï¿½Èµï¿½Ò»ï¿½ï¿½ï¿½ÂµÄ£ï¿½Ôªï¿½Ø¼ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Öªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-//Ê±ï¿½ä¸´ï¿½Ó¶È£ï¿½ï¿½î»µï¿½ï¿½O(n^2)	ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½O(n)
+//Ö±½Ó²åÈëÅÅĞòËã·¨ »ù±¾²Ù×÷ÊÇ½«Ò»¸ö¼ÇÂ¼²åÈëµ½ÒÑ¾­ÅÅºÃĞòµÄÓĞĞò±íÖĞ£¬´Ó¶øµÈµ½Ò»¸öĞÂµÄ£¬ÔªËØ¼Ó1µÄÓĞĞò±í ÖªµÀ½áÊø£»
+//Ê±¼ä¸´ÔÓ¶È£º×î»µÊÇO(n^2)	×îºÃµÄÇé¿öÏÂO(n)
 void InsertSort(int* a, int len)
 {
 	int idx = 0;
@@ -47,6 +47,7 @@ void InsertSort(int* a, int len)
 	for (int i = 1; i < len; ++i)
 	{	
 		temp = a[i];
+		for (idx = i - 1; idx >= 0 && a[idx] > temp; --idx)
 		{
 			a[idx + 1] = a[idx];
 		}
@@ -54,14 +55,128 @@ void InsertSort(int* a, int len)
 	}
 }
 
+//Ñ¡ÔñÅÅĞòËã·¨
+//Ô­Àí:Ã¿´Î´ÓÂÒĞòÊı×éÖĞÕÒµ½×î´ó£¨×îĞ¡£©µÄÖµ£¬·ÅÔÚµ±Ç°ÂÒĞòÊı×éÍ·²¿£¬×îÖÕÊ¹Êı×éÓĞĞò
+//¸´ÔÓ¶È£º×î»µO(0^2);
+void SelectSort(int* a, int len)
+{
+	for (int i = 0; i < len; ++i)
+	{
+		int min = i;
+		for (int j = i + 1; j < len; ++j)
+		{
+			if (a[j] < a[min])
+			{
+				min = j;
+			}
+		}
+		int temp = a[i];
+		a[i] = a[min];
+		a[min] = temp;
+	}
+}
+
+//shellÅÅĞò  Ï£¶ûÅÅĞòÊÇ½«Êı×é°´ÕÕÒ»¶¨²½³¤·Ö³É¼¸¸ö×ÓÊı×é½øĞĞÅÅĞò£¬Í¨¹ıÖğ½¥Ëõ¶Ì²½³¤À´Íê³É×îÖÕÅÅĞò
+//Ê±¼ä¸´ÔÓ¶È£ºO(nlogn) ~~ O(n^2);
+void ShellSort(int* a, int len)
+{
+	for (int gap = len >> 1; gap > 0; gap >>= 1)
+	{
+		for (int i = gap; i < len; ++i)
+		{
+			int temp = a[i];
+			int j = i - gap;
+			for (; j >= 0 && a[j] > temp; j -= gap)
+			{
+				a[j + gap] = a[j];
+			}
+			a[j + gap] = temp;
+		}
+	}
+}
+
+//¹é²¢ÅÅĞò ½«Ò»¸öÊı×é´òÉ¢³ÉĞ¡Êı×é£¬È»ºó°ÑĞ¡Êı×éÆ´´ÕÔÙÅÅĞòÖªµÀÊı×éÓĞĞò
+void MergeArray(int* nums, int begin, int mid, int end, int* temp)
+{
+	int lb = begin, rb = mid, tb = begin;
+	while (lb != mid && rb != end)
+	{
+		if (nums[lb] < nums[rb])
+		{
+			temp[tb++] = nums[lb++];
+		}
+		else
+		{
+			temp[tb++] = nums[rb++];
+		}
+	}
+	while (lb < mid)
+	{
+		temp[tb++] = nums[lb++];
+	}
+	while (rb < end)
+	{
+		temp[tb++] = nums[rb++];
+	}
+
+	for (int i = begin; i < end; i++)
+	{
+		nums[i] = temp[i];
+	}
+}
+
+void MergeSort(int* nums, int begin, int end, int* temp)
+{
+	int mid = (begin + end) / 2;
+	if (mid != begin) 
+	{
+		MergeSort(nums, begin, mid, temp);
+		MergeSort(nums, mid, end, temp);
+		MergeArray(nums, begin, mid, end, temp);
+	}
+}
+
+void Swap(int& a, int& b)
+{
+	int temp = a;
+	a = b;
+	b = temp;
+}
+
+//¿ìËÙÅÅĞò 	Ñ¡ÔñÒ»¸ö»ù×¼Êı£¬°Ñ±ÈÕâ¸öÊıĞ¡µÄÅ²µ½×ó±ß Õâ¸öÊı´óµÄÒÆ¶¯µ½ÓÒ±ß È»ºó²»¶Ï¶Ô×óÓÒÁ½±ßÖ´ĞĞÕâ¸ö²Ù×÷ ÖªµÀÊı×éÓĞĞò
+//Ê±¼ä¸´ÔÓ¶È£ºÆ½¾ùÊ±¼ä¸´ÔÓ¶È£ºO(nlog2n);
+void QuickSort(int* nums, int begin, int end)
+{
+	if (begin < end - 1)
+	{
+		int lb = begin, rb = end - 1;
+		while (lb < rb) 
+		{
+			while (nums[rb] >= nums[begin] && lb < rb)
+			{
+				rb--;
+			}
+			while (nums[lb] <= nums[begin] && lb < rb)
+			{
+				lb++;
+			}
+			Swap(nums[lb], nums[rb]);
+		}
+		Swap(nums[begin], nums[lb]);
+		QuickSort(nums, begin, lb);
+		QuickSort(nums, lb + 1, end);
+	}
+}
+
 void TestSort()
 {
 	int arr[] = { 4, 10, 23, 90, 29, 78, 100, 66 };
 	int len = sizeof(arr) / sizeof(arr[0]);
-	BubbleSort(arr, len);
-	PrintArr(arr, len);
-	InsertSort(arr, len);
-	PrintArr(arr, len);
+// 	BubbleSort(arr, len);
+// 	PrintArr(arr, len);
+ 	QuickSort(arr, 0, len);
+ 	PrintArr(arr, len);
+//	ShellSort(arr, len);
 }
 
 #endif
