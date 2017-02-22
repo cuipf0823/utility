@@ -15,12 +15,13 @@ void PrintArr(int arr[], int len)
 	std::cout << std::endl;
 }
 
+//冒泡排序 相邻两个元素比较 时间复杂度：最坏是O(n^2)	最好的情况下O(n)
 void  BubbleSort(int* a, int len)
 {
-	bool noswap = true;
 	for (int i = 0; i < len; ++i)
 	{
-		for (int j = 0; j < len - i; ++j)
+		bool noswap = true;
+		for (int j = 0; j < len - i - 1; ++j)
 		{
 			if (a[j] > a[j + 1])
 			{
@@ -37,14 +38,12 @@ void  BubbleSort(int* a, int len)
 	}
 }
 
-
-
 void TestSort()
 {
-	int arr[] = { 10, 23, 4, 90, 29, 78, 100, 66 };
- 	int len = sizeof(arr) / sizeof(arr[0]);
- 	BubbleSort(arr, len);
- 	PrintArr(arr, len);	
+	int arr[] = { 4, 10, 23, 90, 29, 78, 100, 66 };
+	int len = sizeof(arr) / sizeof(arr[0]);
+	BubbleSort(arr, len);
+	PrintArr(arr, len);
 }
 
 #endif
