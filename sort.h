@@ -38,11 +38,29 @@ void  BubbleSort(int* a, int len)
 	}
 }
 
+//ֱ�Ӳ��������㷨 ���������ǽ�һ����¼���뵽�Ѿ��ź����������У��Ӷ��ȵ�һ���µģ�Ԫ�ؼ�1������� ֪��������
+//ʱ�临�Ӷȣ����O(n^2)	��õ������O(n)
+void InsertSort(int* a, int len)
+{
+	int idx = 0;
+	int temp = 0;
+	for (int i = 1; i < len; ++i)
+	{	
+		temp = a[i];
+		{
+			a[idx + 1] = a[idx];
+		}
+		a[idx + 1] = temp;
+	}
+}
+
 void TestSort()
 {
 	int arr[] = { 4, 10, 23, 90, 29, 78, 100, 66 };
 	int len = sizeof(arr) / sizeof(arr[0]);
 	BubbleSort(arr, len);
+	PrintArr(arr, len);
+	InsertSort(arr, len);
 	PrintArr(arr, len);
 }
 
