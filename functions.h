@@ -56,4 +56,71 @@ bool OnHeap(const char* address)
 	char onstack;
 	return address < &onstack;
 }
+
+
+
+/*
+* 求数值的整数次方
+* 注意；1. double、float判断和0相等的方式；
+*      2. 注意考虑base为0的情况；
+*      3. 注意考虑exponent为负数的情况
+*/
+double PowerWithUnsignedExponent(double base, int exponent)
+{
+	double result = 1.0;
+	for (int idx = 0; idx < exponent; ++idx)
+	{
+		result *= base;
+	}
+	return result;
+}
+
+/*
+* 数值整数次方的优化方式
+*/
+double PowerUnsignedExpOptimize(double base, int exponent)
+{
+	if (exponent == 0)
+	{
+		return 1.0;
+	}
+	if (exponent == 1)
+	{
+		return base;
+	}
+	double result = PowerWithUnsignedExponent(base, exponent >> 1);
+	result *= result;
+	if (exponent & 0x1 == 1)
+	{
+		result *= base;
+	}
+	return result;
+}
+
+double Power(double base, int exponent)
+{
+	if ((base - 0.00 > -0.00000001) && (base - 0.00 < 0.0000001))
+	{
+		return base;
+	}
+	if (exponent >= 0)
+	{
+		return PowerWithUnsignedExponent(base, exponent);
+	}
+	else
+	{
+		unsigned int abs_exponent = static_cast<unsigned int>(-exponent);
+		return 1.0 / PowerWithUnsignedExponent(base, abs_exponent);
+	}
+}
+
+
+//测试
+void TestFunc()
+{
+	std::cout << Power(2.0, 4) << std::endl;
+	std::cout << Power(0.0, -2) << std::endl;
+	std::cout << Power(3.0, -2) << std::endl;
+
+}
 #endif

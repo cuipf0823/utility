@@ -6,6 +6,7 @@
 #include "iterator.h"
 #include "functions.h"
 #include "lru_cache.h"
+#include "sort.h"
 
 void TestInterator()
 {
@@ -86,6 +87,10 @@ void Test()
 	TestRevervse();
 	std::cout << "=================================" << std::endl;
 	TestLRU();
+	std::cout << "=================================" << std::endl;
+	TestSort();
+	std::cout << "=================================" << std::endl;
+	TestFunc();
 }
 
 #endif
