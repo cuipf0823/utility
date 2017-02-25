@@ -23,7 +23,7 @@ set(SOURCE_FILES
         ${src_path}utility.cc
         ${src_path}unit_test.h
         ${src_path}common.cc
-        )
+        ${src_path}list_op.h)
 add_definitions("-ggdb -fPIC -ffunction-sections -O0 -std=c++11")
 add_executable(common ${SOURCE_FILES})
 target_link_libraries(common  "pthread" )

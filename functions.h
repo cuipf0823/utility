@@ -8,7 +8,6 @@
 #include <iostream>
 #include <algorithm>
 #include <string.h>
-#include <assert.h>
 
 
 //翻转字符串函数 如：“12345”翻转成“54321”
@@ -193,40 +192,6 @@ bool ReplaceSpace(char* src, int len)
 	return true;
 }
 
-/*
- * 链表相关
- */
-
-struct ListNode
-{
-	int value;
-	ListNode* next;
-};
-
-/*
- * 在链表尾部添加新节点
- */
-void AddList(ListNode** head, int value)
-{
-	ListNode* node = new ListNode();
-	assert(node != nullptr);
-	node->value = value;
-	node->next = nullptr;
-	if (*head == nullptr)
-	{
-		*head = node;
-	}
-	else
-	{
-		ListNode* tmp_node = *head;
-		while (tmp_node->next != nullptr)
-		{
-			tmp_node = tmp_node->next;
-		}
-		tmp_node->next = node;
-	}
-
-}
 
 void TestFunc()
 {

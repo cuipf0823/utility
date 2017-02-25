@@ -7,6 +7,7 @@
 #include "functions.h"
 #include "lru_cache.h"
 #include "sort.h"
+#include "list_op.h"
 
 void TestInterator()
 {
@@ -91,6 +92,8 @@ void Test()
 	TestSort();
 	std::cout << "=================================" << std::endl;
 	TestFunc();
+	std::cout << "=================================" << std::endl;
+    TestListOP();
 }
 
 #endif
