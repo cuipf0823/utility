@@ -8,7 +8,8 @@
 #include <iostream>
 #include <algorithm>
 #include <string.h>
-using namespace std;
+#include <assert.h>
+
 
 //翻转字符串函数 如：“12345”翻转成“54321”
 void reverse_by_swap(char* str, int n)
@@ -91,7 +92,7 @@ double PowerUnsignedExpOptimize(double base, int exponent)
 	}
 	double result = PowerWithUnsignedExponent(base, exponent >> 1);
 	result *= result;
-	if (exponent & 0x1 == 1)
+	if ((exponent & 0x1) == 1)
 	{
 		result *= base;
 	}
@@ -168,7 +169,7 @@ bool ReplaceSpace(char* src, int len)
 			++space_num;
 		}
 	}
-	int ex_len = strlen(src) + space_num * 2;
+	size_t ex_len = strlen(src) + space_num * 2;
 	if (ex_len > len)
 	{
 		return false;
@@ -190,6 +191,41 @@ bool ReplaceSpace(char* src, int len)
 		--rend;
 	}
 	return true;
+}
+
+/*
+ * 链表相关
+ */
+
+struct ListNode
+{
+	int value;
+	ListNode* next;
+};
+
+/*
+ * 在链表尾部添加新节点
+ */
+void AddList(ListNode** head, int value)
+{
+	ListNode* node = new ListNode();
+	assert(node != nullptr);
+	node->value = value;
+	node->next = nullptr;
+	if (*head == nullptr)
+	{
+		*head = node;
+	}
+	else
+	{
+		ListNode* tmp_node = *head;
+		while (tmp_node->next != nullptr)
+		{
+			tmp_node = tmp_node->next;
+		}
+		tmp_node->next = node;
+	}
+
 }
 
 void TestFunc()

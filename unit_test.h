@@ -49,11 +49,11 @@ void TestRevervse()
 {
 	char str[] = "12345abcdefg";
 	reverse_by_swap(str, sizeof(str) - 1);
-	std::cout << str << endl;
+	std::cout << str << std::endl;
 	reverse_by_xor(str, sizeof(str) - 1);
-	std::cout << str << endl;
+	std::cout << str << std::endl;
 	reverse_by_std(str, sizeof(str) - 1);
-	std::cout << str << endl;
+	std::cout << str << std::endl;
 }
 
 void TestLRU()
@@ -70,7 +70,7 @@ void TestLRU()
 	auto* handle4 = cache.Insert(200, 300);
 	cache.Debug();
 	auto* finder = cache.LookUp(100);
-	std::cout << finder->value << endl;
+	std::cout << finder->value << std::endl;
 	cache.Release(handle3);
 	cache.Release(handle4);
 	cache.Release(finder);

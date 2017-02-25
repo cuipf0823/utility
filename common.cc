@@ -5,6 +5,5 @@
 int main(int argc, char *argv[])
 {
 	Test();
-	getchar();
 	return 0;
 }

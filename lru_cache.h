@@ -108,10 +108,10 @@ LRUCache<Key, Value>::Insert(const Key& key, const Value& value, size_t charge /
 	//当前容器内元素粒度大于设定值，删除最长时间未使用的元素 循环保证元素从内存清理
 	while (usage_ > capacity_ && !lru_.empty())
 	{
-		LRUHandle* handle = lru_.back();
-		table_.erase(handle->key);
+		LRUHandle* back_handle = lru_.back();
+		table_.erase(back_handle->key);
 		lru_.pop_back();
-		Release(handle);
+		Release(back_handle);
 	}
 	return handle;
 }
@@ -229,7 +229,7 @@ public:
 	{
 		for (size_t idx = 0; idx < kNumShards; ++idx)
 		{
-			std::cout << "Shard: " << idx << endl;
+			std::cout << "Shard: " << idx << std::endl;
 
 			shard_[idx].Debug();
 			std::cout << std::endl;
