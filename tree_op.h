@@ -10,7 +10,7 @@
  *  二叉树相关
  */
 
-#include <tkDecls.h>
+#include <iostream>
 
 /*
  * 构造二叉树
@@ -30,6 +30,7 @@ BinaryTreeNode* ConstructCode(int* start_pre_order, int* end_pre_order, int* sta
     BinaryTreeNode* root = new BinaryTreeNode();
     root->value = root_value;
     root->left = root->right = nullptr;
+    std::cout << root->value << '\t';
     if (start_pre_order == end_pre_order)
     {
         if (start_in_order == end_in_order && *start_in_order == *start_pre_order)
@@ -72,7 +73,29 @@ BinaryTreeNode* Construct(int* pre_order, int* in_order, int length)
         return nullptr;
     }
     return ConstructCode(pre_order, pre_order + length - 1, in_order, in_order + length - 1);
+}
 
+/*
+ * binary tree postorder traversal print
+ */
+void PostOrderPrint(BinaryTreeNode* root)
+{
+    if (root != nullptr)
+    {
+        PostOrderPrint(root->left);
+        PostOrderPrint(root->right);
+        std::cout << root->value << "\t";
+    }
+}
+
+void TestTreeOP()
+{
+    int pre_order[] = { 1, 2, 4, 7, 3, 5, 6, 8 };
+    int in_order[]  = { 4, 7, 2, 1, 5, 3, 8, 6 };
+    int length = sizeof(pre_order) / sizeof(pre_order[0]);
+    BinaryTreeNode* post_order = Construct(pre_order, in_order, length);
+    PostOrderPrint(post_order);
+    //binary tree delete
 }
 
 #endif //COMMON_TREE_OP_H

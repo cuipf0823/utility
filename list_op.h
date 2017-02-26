@@ -135,6 +135,15 @@ void TestListOP()
     }
     ListPrint(list);
     ReversePrintList(list);
+
+    //链表删除
+    while (list != nullptr)
+    {
+        ListNode* node = list;
+        list = list->next;
+        delete node;
+        node = nullptr;
+    }
 };
 
 #endif //COMMON_LIST_OP_H_H

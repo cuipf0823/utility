@@ -8,6 +8,7 @@
 #include "lru_cache.h"
 #include "sort.h"
 #include "list_op.h"
+#include "tree_op.h"
 
 void TestInterator()
 {
@@ -90,10 +91,13 @@ void Test()
 	TestLRU();
 	std::cout << "=================================" << std::endl;
 	TestSort();
+    TestSearch();
 	std::cout << "=================================" << std::endl;
 	TestFunc();
 	std::cout << "=================================" << std::endl;
     TestListOP();
+    std::cout << "=================================" << std::endl;
+    TestTreeOP();
 }
 
 #endif

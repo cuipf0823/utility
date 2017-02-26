@@ -1,5 +1,6 @@
 /*
-	常见几种排序算法实现
+*	常见几种排序算法实现
+*	常见查找算法实现
 */
 #ifndef COMMON_SORT_H
 #define COMMON_SORT_H
@@ -177,6 +178,94 @@ void TestSort()
  	QuickSort(arr, 0, len);
  	PrintArr(arr, len);
 //	ShellSort(arr, len);
+}
+
+
+/*
+ * *************************************************************
+ */
+
+//常见查找算法
+
+/*
+ * 1. 顺序查找算法  无序查找，属于线性查找 从序列到一端开始一次遍历
+ * 时间复杂度：O(n)
+ */
+
+int SequenceSearch(int arr[], int length, int value)
+{
+	int index = 0;
+	for (int idx = 0; idx < length; ++idx)
+	{
+		if (arr[idx] == value)
+		{
+			return idx;
+		}
+	}
+	return -1;
+}
+
+/*
+ * 2. 二分查找算法（折半查找）
+ * 思想：根据给定的值和序列的值对比，相等 找到；不等 再依次查找左右子序列；
+ * 注意：1. 二分查找的序列必须为有序序列，如果是无序的话，先排序；
+ * 		2. 对于插入删除频繁的队列，维护有序队列成本较高，不建议使用；
+ * 时间复杂度：最坏是：O(log2(n + 1)); 平均：O(log2n)
+ */
+
+int BinarySearch(int arr[], int length, int value)
+{
+	int mid = 0;
+	int low = 0;
+	int high = length - 1;
+	while (low < high)
+	{
+		mid = (low + high) / 2;
+		if (arr[mid] == value)
+		{
+			return mid;
+		}
+		else if (arr[mid] < value)
+		{
+			low = mid + 1;
+		}
+		else
+		{
+			high = mid - 1;
+		}
+	}
+	return -1;
+}
+
+int BinarySearchRe(int arr[], int low, int high, int value)
+{
+	int index = -1;
+	int mid = (low + high) / 2;
+	if (arr[mid] == value)
+	{
+		index = mid;
+	}
+	else if (arr[mid] < value)
+	{
+		index = BinarySearchRe(arr, mid + 1, high, value);
+		std::cout << index << std::endl;
+	}
+	else
+	{
+		index = BinarySearchRe(arr,  low,  mid - 1, value);
+	}
+	return index;
+}
+
+void TestSearch()
+{
+	int arr[] = { 4, 10, 23, 29, 78, 100, 166 };
+	int len = sizeof(arr) / sizeof(arr[0]);
+	std::cout << SequenceSearch(arr, len, 29) << std::endl;
+	std::cout << BinarySearch(arr, len, 29) << std::endl;
+	std::cout << BinarySearchRe(arr, 0, len - 1, 299) << std::endl;
+
+
 }
 
 #endif
