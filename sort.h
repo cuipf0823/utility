@@ -209,7 +209,7 @@ int SequenceSearch(int arr[], int length, int value)
  * 2. 二分查找算法（折半查找）
  * 思想：根据给定的值和序列的值对比，相等 找到；不等 再依次查找左右子序列；
  * 注意：1. 二分查找的序列必须为有序序列，如果是无序的话，先排序；
- * 		2. 对于插入删除频繁的队列，维护有序队列成本较高，不建议使用；
+ * 		 2. 对于插入删除频繁的队列，维护有序队列成本较高，不建议使用；
  * 时间复杂度：最坏是：O(log2(n + 1)); 平均：O(log2n)
  */
 
@@ -239,22 +239,54 @@ int BinarySearch(int arr[], int length, int value)
 
 int BinarySearchRe(int arr[], int low, int high, int value)
 {
-	int index = -1;
+	if (low < high)
+	{
+		return -1;
+	}
+
 	int mid = (low + high) / 2;
 	if (arr[mid] == value)
 	{
-		index = mid;
+		return mid;
 	}
 	else if (arr[mid] < value)
 	{
-		index = BinarySearchRe(arr, mid + 1, high, value);
-		std::cout << index << std::endl;
+		return BinarySearchRe(arr, mid + 1, high, value);
 	}
 	else
 	{
-		index = BinarySearchRe(arr,  low,  mid - 1, value);
+		return BinarySearchRe(arr,  low,  mid - 1, value);
 	}
-	return index;
+}
+
+/*
+*	3. 插值查找算法
+*   思想：基于二分查找算法，根据查找点在序列中的大概位置，将查找点修改为自适应的，提高查找效率；
+*	注: 对于表长较大，而且元素分布比较均匀的表来说，该算法平均性能比二分查找要好很多，反之，不一定合适
+*	时间复杂度：查找成功或者失败的时间复杂度均为O(log2(log2n))
+*/
+int InsertionSearch(int arr[], int length, int value)
+{
+	int mid = 0;
+	int low = 0;
+	int high = length - 1;
+	while (low < high)
+	{
+		mid = low + (value - arr[low]) / (arr[high] - arr[low])*(high - low);
+		if (arr[mid] == value)
+		{
+			return mid;
+		}
+		else if (arr[mid] < value)
+		{
+			low = mid + 1;
+		}
+		else
+		{
+			high = mid - 1;
+		}
+	}
+	return -1;
 }
 
 void TestSearch()
@@ -264,6 +296,7 @@ void TestSearch()
 	std::cout << SequenceSearch(arr, len, 29) << std::endl;
 	std::cout << BinarySearch(arr, len, 29) << std::endl;
 	std::cout << BinarySearchRe(arr, 0, len - 1, 299) << std::endl;
+	std::cout << InsertionSearch(arr, len, 29) << std::endl;
 
 
 }
