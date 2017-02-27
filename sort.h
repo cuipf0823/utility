@@ -1,6 +1,7 @@
 /*
 *	常见几种排序算法实现
 *	常见查找算法实现
+*   常见的算法
 */
 #ifndef COMMON_SORT_H
 #define COMMON_SORT_H
@@ -324,8 +325,38 @@ void TestSearch()
 	std::cout << BinarySearch(arr, len, 29) << std::endl;
 	std::cout << BinarySearchRe(arr, 0, len - 1, 299) << std::endl;
 	std::cout << InsertionSearch(arr, len, 29) << std::endl;
+}
 
 
+/**
+ *	斐波那契数组的计算迭代方式
+ *  效率低
+ */
+long long FabonnacciRe(uint32_t n)
+{
+	if (n <= 1)
+	{
+		return n;
+	}
+	return FabonnacciRe(n - 1) + FabonnacciRe(n - 2);
+}
+
+long long Fabonnacci(uint32_t n)
+{
+	if (n <= 1)
+	{
+		return n;
+	}
+	long long fib_minus_one = 1;
+	long long fib_minus_two = 2;
+	long long fib_n = 0;
+	for (int index = 2; index <= n; ++index)
+	{
+		fib_n = fib_minus_one + fib_minus_two;
+		fib_minus_two = fib_minus_one;
+		fib_minus_one = fib_n;
+	}
+	return fib_n;
 }
 
 #endif
