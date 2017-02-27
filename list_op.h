@@ -94,7 +94,6 @@ bool DeleteListNode(ListNode** head, ListNode* del_node)
     }
     if (*head == del_node)
     {
-        //only one node
         delete del_node;
         del_node = nullptr;
         *head = nullptr;
