@@ -169,6 +169,33 @@ void QuickSort(int* nums, int begin, int end)
 	}
 }
 
+/*
+ * 快速排序非递归实现
+ */
+void QuickSortN(int* nums, int begin, int end)
+{
+    if (nums == nullptr || begin >= end)
+    {
+        //input invaild
+        return;
+    }
+    int guard = nums[begin];
+    while (begin <= end)
+    {
+        while (begin < end && nums[end] >= guard)
+        {
+            --end;
+        }
+        nums[begin] = nums[end];
+        while (begin < end && nums[begin] <= guard)
+        {
+            ++begin;
+        }
+        nums[end] = nums[begin];
+    }
+    nums[begin] = guard;
+}
+
 void TestSort()
 {
 	int arr[] = { 4, 10, 23, 90, 29, 78, 100, 66 };

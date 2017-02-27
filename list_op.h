@@ -80,6 +80,50 @@ void RemoveListNode(ListNode** head, int value)
 }
 
 /*
+ *  单链表中删除某个元素要求时间复杂度为O(1)
+ *  思想：只有一个元素 直接删除
+ *       删除结点在尾部，需要遍历
+ *       在列表中，next的元素赋值给删除结点，删除next结点即可，效果是一样的
+ */
+bool DeleteListNode(ListNode** head, ListNode* del_node)
+{
+    if (head == nullptr || del_node == nullptr)
+    {
+        //para invaild
+        return false;
+    }
+    if (*head == del_node)
+    {
+        //only one node
+        delete del_node;
+        del_node = nullptr;
+        *head = nullptr;
+    }
+
+    if (del_node->next != nullptr)
+    {
+        ListNode* node = del_node->next;
+        del_node->next = node->next;
+        del_node->value = node->value;
+        delete node;
+        node = nullptr;
+    }
+    else
+    {
+        //删除元素在链表尾部，此时只能使用从头开始便利的方式删除了
+        ListNode* node = (*head)->next;
+        while (node->next != del_node)
+        {
+            node = node->next;
+        }
+        node->next = nullptr;
+        delete del_node;
+        del_node = nullptr;
+    }
+    return true;
+}
+
+/*
  * 获取链表的长度
  */
 
