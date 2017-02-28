@@ -168,6 +168,39 @@ void ReversePrintList(ListNode* list)
     std::cout << std::endl;
 }
 
+/*
+ * 获取链表中倒数第K个结点
+ * 思想：1. 先获取链表的总长度，再根据总长度和K来获取结点位置，时间复杂度O(n*2),不可取
+ *      2. 使用双指针遍历链表（遍历单链表的一种方式）；
+ */
+ListNode* FindNodeFromTail(ListNode* list, uint32_t k)
+{
+    if (list == nullptr || k == 0)
+    {
+        //parameter invalid
+        return nullptr;
+    }
+    ListNode* node = list;
+    for (uint32_t index = 1; index < k; ++index)
+    {
+        if (node->next != nullptr)
+        {
+            node = node->next;
+        }
+        else
+        {
+            return nullptr;
+        }
+    }
+    ListNode* pdata = list;
+    while (node->next != nullptr)
+    {
+        node = node->next;
+        pdata = pdata->next;
+    }
+    return pdata;
+}
+
 void TestListOP()
 {
     ListNode* list = nullptr;
