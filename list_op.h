@@ -228,8 +228,9 @@ ListNode* ListReverse(ListNode* list)
 }
 
 /*
-* 
-*/
+ *  两个有序的链表，合并为一个有序链表
+ *  非递归方式
+ */
 ListNode* CombineList(ListNode* list1, ListNode* list2)
 {
 	if (list1 == nullptr)
@@ -240,53 +241,82 @@ ListNode* CombineList(ListNode* list1, ListNode* list2)
 	{
 		return list1;
 	}
-	ListNode* ret = list;
 	ListNode* node1 = list1;
 	ListNode* node2 = list2;
-	ListNode* ret_head = nullptr;
+    ListNode* ret = nullptr;
+    ListNode* temp = nullptr;
 	while (node1 != nullptr && node2 != nullptr)
 	{
 		if (node1->value < node2->value)
 		{
-			ret->next = node1;
-			node1 = node1->next;
-			
-			if (ret == nullptr)
-			{
-				ret = node1;
-			}
-			else
-			{
-				ret->next = node1;
-				ret = ret->next;
-			}
-			node1 = node1->next;
+            if (temp == nullptr)
+            {
+                temp = node1;
+            }
+            else
+            {
+                temp->next = node1;
+                temp = temp->next;
+            }
+            node1 = node1->next;
 		}
 		else
 		{
-			if (ret == nullptr)
-			{
-				ret = node2;
-			}
-			else
-			{
-				ret->next = node2;
-				ret = ret->next;
-			}
-			node2 = node2->next;
+            if (temp == nullptr)
+            {
+                temp = node2;
+            }
+            else
+            {
+                temp->next = node2;
+                temp = temp->next;
+            }
+            node2 = node2->next;
 		}
+
+        if (ret == nullptr)
+        {
+            ret = temp;
+        }
 	}
 	if (node1 == nullptr)
 	{
-		ret->next = node2;
+		temp->next = node2;
 	}
 	if (node2 == nullptr)
 	{
-		ret->next = node1;
+		temp->next = node1;
 	}
 	return ret;
 }
 
+/*
+ * 有序链表合并为单链表
+ * 递归方式实现
+ */
+ListNode* CombineListRe(ListNode* list1, ListNode* list2)
+{
+    if (list1 == nullptr)
+    {
+        return list2;
+    }
+    if (list2 == nullptr)
+    {
+        return list1;
+    }
+    ListNode* merge_header = nullptr;
+    if (list1->value < list2->value)
+    {
+        merge_header = list1;
+        merge_header->next = CombineListRe(list1->next, list2);
+    }
+    else
+    {
+        merge_header = list2;
+        merge_header->next = CombineListRe(list1, list2->next);
+    }
+    return merge_header;
+}
 
 
 void TestListOP()
@@ -299,10 +329,11 @@ void TestListOP()
 		AddList(&list1, idx + 2);
     }
 	//ListPrint(ListReverse(list));
-
+    ListNode* list2 = nullptr;
 	ListPrint(list);
 	ListPrint(list1);
-	ListPrint(CombineList(list, list1));
+	ListPrint(CombineList(list, list2));
+    ListPrint(CombineListRe(list, list1));
 
     //链表删除
     while (list != nullptr)
