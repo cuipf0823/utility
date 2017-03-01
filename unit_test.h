@@ -92,11 +92,11 @@ void Test()
 	std::cout << "=================================" << std::endl;
 	TestSort();
     TestSearch();
-	std::cout << "=================================" << std::endl;
+	std::cout << "==============func================" << std::endl;
 	TestFunc();
-	std::cout << "=================================" << std::endl;
+	std::cout << "==============list=================" << std::endl;
     TestListOP();
-    std::cout << "=================================" << std::endl;
+    std::cout << "==============tree================" << std::endl;
     TestTreeOP();
 }
 
