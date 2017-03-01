@@ -227,18 +227,82 @@ ListNode* ListReverse(ListNode* list)
 	return reverse;
 }
 
+/*
+* 
+*/
+ListNode* CombineList(ListNode* list1, ListNode* list2)
+{
+	if (list1 == nullptr)
+	{
+		return list2;
+	}
+	if (list2 == nullptr)
+	{
+		return list1;
+	}
+	ListNode* ret = list;
+	ListNode* node1 = list1;
+	ListNode* node2 = list2;
+	ListNode* ret_head = nullptr;
+	while (node1 != nullptr && node2 != nullptr)
+	{
+		if (node1->value < node2->value)
+		{
+			ret->next = node1;
+			node1 = node1->next;
+			
+			if (ret == nullptr)
+			{
+				ret = node1;
+			}
+			else
+			{
+				ret->next = node1;
+				ret = ret->next;
+			}
+			node1 = node1->next;
+		}
+		else
+		{
+			if (ret == nullptr)
+			{
+				ret = node2;
+			}
+			else
+			{
+				ret->next = node2;
+				ret = ret->next;
+			}
+			node2 = node2->next;
+		}
+	}
+	if (node1 == nullptr)
+	{
+		ret->next = node2;
+	}
+	if (node2 == nullptr)
+	{
+		ret->next = node1;
+	}
+	return ret;
+}
+
 
 
 void TestListOP()
 {
     ListNode* list = nullptr;
+	ListNode* list1 = nullptr;
     for (int idx = 0; idx < 8; ++idx)
     {
-
-        AddList(&list, idx);
+        AddList(&list, idx + 10);
+		AddList(&list1, idx + 2);
     }
-    ListPrint(list);
-	ListPrint(ListReverse(list));
+	//ListPrint(ListReverse(list));
+
+	ListPrint(list);
+	ListPrint(list1);
+	ListPrint(CombineList(list, list1));
 
     //链表删除
     while (list != nullptr)
