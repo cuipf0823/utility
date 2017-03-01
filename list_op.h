@@ -201,6 +201,34 @@ ListNode* FindNodeFromTail(ListNode* list, uint32_t k)
     return pdata;
 }
 
+
+/*
+*  单链表的逆转
+*  需要三个指针：1. 指向node一个指针 指向node->next一个指针，指向逆序队列一个指针 
+*/
+ListNode* ListReverse(ListNode* list)
+{
+	ListNode* reverse = nullptr;
+	ListNode* node = list;
+	ListNode* prev = nullptr;
+	while (node != nullptr)
+	{
+		ListNode* pnext = node->next;
+		if (pnext == nullptr)
+		{
+			//注意这里不能漏写
+			node->next = prev;
+			reverse = node;
+		}
+		node->next = prev;
+		prev = node;
+		node = pnext;
+	}
+	return reverse;
+}
+
+
+
 void TestListOP()
 {
     ListNode* list = nullptr;
@@ -210,7 +238,7 @@ void TestListOP()
         AddList(&list, idx);
     }
     ListPrint(list);
-    ReversePrintList(list);
+	ListPrint(ListReverse(list));
 
     //链表删除
     while (list != nullptr)
