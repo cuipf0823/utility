@@ -4,7 +4,10 @@
 #ifndef COMMON_UTILITY_H
 #define COMMON_UTILITY_H
 
+#include <string.h>
+#include <assert.h>
 #include <pthread.h>
+#include <vector>
 #include <boost/noncopyable.hpp>
 
 //Ïß³ÌËø
@@ -114,7 +117,7 @@ public:
 		return size_;
 	}
 private:
-	const char* data_;
+	char* data_;
 	size_t size_;
 };
 
@@ -158,7 +161,7 @@ String::String(const char* s, size_t n)
 		data_ = new char[n + 1];
 		assert(data_ != nullptr);
 		size_ = n + 1;
-		strcpy_s(data_, n, s);
+		strcpy(data_, s);
 	}
 	else
 	{
@@ -167,7 +170,7 @@ String::String(const char* s, size_t n)
 	}
 }
 
-String::String(const String& str) : data_(new[str.size()]), size_(str.size())
+String::String(const String& str) : data_(new char[str.size()]), size_(str.size())
 {
 	assert(data_ != nullptr);
 	strcpy(data_, str.c_str());
@@ -190,9 +193,19 @@ String& String::operator=(const String& rhs)
 	size_ = 0;
 	data_ = new char[rhs.size()];
 	assert(data_ != nullptr);
-	size_ = str.size();
+	size_ = rhs.size();
 	strcpy(data_, rhs.c_str());
 	return *this;
+}
+
+char& String::operator[](size_t index)
+{
+    return data_[index];
+}
+
+String String::operator+(const String &rhs)
+{
+
 }
 
 
