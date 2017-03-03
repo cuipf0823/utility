@@ -8,6 +8,10 @@
 #include <assert.h>
 #include <pthread.h>
 #include <vector>
+#include <string>
+#include <iostream>
+#include <ostream>
+#include <initializer_list>
 #include <boost/noncopyable.hpp>
 
 //线程锁
@@ -102,11 +106,15 @@ public:
 	String(const String& str);
 	//赋值构造函数
 	String& operator=(const String& rhs);
-	//运算符重载
-	String operator+(const String& rhs);
-	char& operator[](size_t index);
-	bool operator==(const String& str);
 
+	//运算符重载
+	char& operator[](size_t index);
+	const char& operator[](size_t index) const;
+	String& operator+=(const String& rhs);
+
+	friend std::istream& operator>>(std::istream& is, String& str);
+	friend std::ostream& operator<<(std::ostream& os, const String& str);
+public:
 	const char* c_str() const
 	{
 		return data_;
@@ -121,27 +129,27 @@ private:
 	size_t size_;
 };
 
-String::String() :data_(nullptr), size_(0)
+//构造函数 对于初始化为空的构造函数，申请一个元素，下面函数中就不需要判null
+String::String() :data_(new char[1]), size_(0)
 {
-
+	assert(data_ != nullptr);
+	*data_ = '\0';
 }
 
+//析构函数
 String::~String()
 {
-	if (data_ != nullptr)
-	{
-		delete [] data_;
-		data_ = nullptr;
-	}
+	delete [] data_;
+	data_ = nullptr;
 	size_ = 0;
 }
 
-
+//构造函数
 String::String(const char* s)
 {
 	if (s != nullptr)
 	{
-		size_ = strlen(s) + 1;
+		size_ = strlen(s);
 		data_ = new char[strlen(s) + 1];
 		assert(data_ != nullptr);
 		//strcpy 复制的字符串包含'\0'
@@ -149,31 +157,50 @@ String::String(const char* s)
 	}
 	else
 	{
-		data_ = nullptr;
+		data_ = new char[1];
+		assert(data_ != nullptr);
+		*data_ = '\0';
 		size_ = 0;
 	}
 }
 
+//构造函数
 String::String(const char* s, size_t n)
 {
 	if (n > 0)
 	{
 		data_ = new char[n + 1];
 		assert(data_ != nullptr);
-		size_ = n + 1;
+		size_ = n;
 		strcpy(data_, s);
 	}
 	else
 	{
-		data_ = nullptr;
+		data_ = new char[1];
+		assert(data_ != nullptr);
+		*data_ = '\0';
 		size_ = 0;
 	}
 }
 
-String::String(const String& str) : data_(new char[str.size()]), size_(str.size())
+//拷贝构造函数
+String::String(const String& str)
 {
-	assert(data_ != nullptr);
-	strcpy(data_, str.c_str());
+	if (str.size() > 0)
+	{
+		data_ = new char[str.size() + 1];
+		size_ = str.size();
+		assert(data_ != nullptr);
+		strcpy(data_, str.c_str());
+	}
+	else
+	{
+		data_ = new char[1];
+		assert(data_ != nullptr);
+		*data_ = '\0';
+		size_ = 0;
+	}
+
 }
 
 /*
@@ -190,29 +217,120 @@ String& String::operator=(const String& rhs)
 		return *this;
 	}
 	delete[] data_;
+	data_ = nullptr;
 	size_ = 0;
-	data_ = new char[rhs.size()];
+	data_ = new char[rhs.size() + 1];
 	assert(data_ != nullptr);
 	size_ = rhs.size();
 	strcpy(data_, rhs.c_str());
 	return *this;
 }
 
+
+/*
+* 无需检测index有效性，index有效性须由外部保证
+*/
 char& String::operator[](size_t index)
 {
+	assert(index < size_ - 1);
     return data_[index];
 }
 
-String String::operator+(const String &rhs)
+const char& String::operator[](size_t index) const
 {
+	assert(index < size_ - 1);
+	return data_[index];
+}
 
+String& String::operator+=(const String& rhs)
+{
+	if (rhs.size() > 0)
+	{
+		size_t length = size_ + rhs.size();
+		char* temp = new char[length + 1];
+		assert(temp != nullptr);
+		strcpy(temp, data_);
+		//可以使用strcat
+		strcpy(temp + size_, rhs.c_str());
+
+		delete [] data_;
+		data_ = temp;
+		size_ = length;
+	}
+	return *this;
+}
+
+
+/************************************************************************/
+//无需重载为类的成员函数，或者说更应该是非成员函数
+
+/*
+* 运算符重载
+*/
+String operator+(const String& lhs, const String &rhs)
+{
+	size_t length = lhs.size() + rhs.size();
+	char* temp = new char[length + 1];
+	assert(temp != nullptr);
+	strcpy(temp, lhs.c_str());
+	//可以使用strcat
+	strcpy(temp + lhs.size(), rhs.c_str());
+	return String(temp, length);
+}
+
+/*
+* 输出运算符重载
+* 1. 形参一需要向其写入内容，又因为我们无法复制一个ostream对象，所以为非常量引用；
+* 2. 输出运算符尽量的减少格式化操作；
+*/
+std::ostream& operator <<(std::ostream& os, const String& str)
+{
+	os << str.data_;
+	return os;
+}
+
+/*
+*  输入运算符重载
+*/
+std::istream& operator>>(std::istream& is, String& str)
+{
+	char temp[100] = { 0 };
+	is >> temp;
+	if (is)
+	{
+		str.data_ = new char[strlen(temp) + 1];
+		assert(str.data_ != nullptr);
+		strcpy(str.data_, temp);
+		str.size_ = strlen(temp);
+	}
+	else
+	{
+		//输入失败赋值为空
+		str = String();
+	}
+	return is;
+}
+
+//关系运算符重载
+bool operator==(const String& lhs, const String& rhs)
+{
+	if (lhs.size() != rhs.size())
+	{
+		return false;
+	}
+	return strcmp(lhs.c_str(), rhs.c_str()) ? false : true;
+}
+
+bool operator!=(const String& lhs, const String& rhs)
+{
+	return !(lhs == rhs);
 }
 
 
 
 
 
-namespace Test
+namespace utility_test
 {
 	void foo(String x)
 	{
@@ -232,21 +350,34 @@ namespace Test
 		String s0;
 		String s1("hello");
 		String s2(s0);
-		String s3 = s1;
-		s2 = s1;
+		String s3 = s1;	 //拷贝构造函数
+		s2 = s1;		 // 赋值构造函数
 
 		foo(s1);
 		bar(s1);
 		foo("temporary");
 		bar("temporary");
 		String s4 = baz();
-
+		if (s1 == s2)	
+		{
+		}
+		std::cout << s1 + s2 + s3 << std::endl;
+		s0 += s1;
+		std::cout << s1 << std::endl;
 		std::vector<String> svec;
 		svec.push_back(s0);
 		svec.push_back(s1);
 		svec.push_back(baz());
 		svec.push_back("good job");
-	}
+		std::string str1("123456");
+		std::cout << str1.size() << std::endl;
+		std::string str2;
+		std::cout << str2.size() << std::endl;
+		int a = 6;
+		int b = 10;
+		std::cout << a++ + b << std::endl;
+		std::cout << a << std::endl;
+ 	}
 }
 
 
