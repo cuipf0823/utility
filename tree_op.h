@@ -88,6 +88,76 @@ void PostOrderPrint(BinaryTreeNode* root)
     }
 }
 
+/*
+ * 二叉树判断是否含有该子树
+ * 使用递归更加直观
+ */
+bool DoseTree1HaveTree2(const BinaryTreeNode* tree1, const BinaryTreeNode* tree2)
+{
+    if (tree2 == nullptr)
+    {
+        return true;
+    }
+    if (tree1 == nullptr)
+    {
+        return false;
+    }
+    if (tree1->value != tree2->value)
+    {
+        return false;
+    }
+    return DoseTree1HaveTree2(tree1->right, tree2->right) && DoseTree1HaveTree2(tree1->left, tree2->left);
+}
+bool HasSubTree(const BinaryTreeNode* tree, const BinaryTreeNode* sub_tree)
+{
+    bool ret = false;
+    //根节点判断
+    if (tree->value == sub_tree->value)
+    {
+        ret = DoseTree1HaveTree2(tree, sub_tree);
+    }
+    //判断左子树
+    if (!ret)
+    {
+        ret = HasSubTree(tree->left, sub_tree);
+    }
+    //判断右子树
+    if (!ret)
+    {
+        ret = HasSubTree(tree->right, sub_tree);
+    }
+    return ret;
+}
+
+/*
+ * 二叉树的镜像
+ * 1. 对于根节点不动，具有左右子树的结点，左右子树互换，到叶子结点结束；
+ */
+void MirrorReverse(BinaryTreeNode* proot)
+{
+    if (proot == nullptr)
+    {
+        return;
+    }
+    if (proot->left == nullptr && proot->right == nullptr)
+    {
+        return;
+    }
+    BinaryTreeNode* ptemp = proot->left;
+    proot->left = proot->right;
+    proot->right = ptemp;
+    if (proot->left != nullptr)
+    {
+        MirrorReverse(proot->left);
+    }
+    if (proot->right)
+    {
+        MirrorReverse(proot->right);
+    }
+}
+
+
+
 void TestTreeOP()
 {
     int pre_order[] = { 1, 2, 4, 7, 3, 5, 6, 8 };
