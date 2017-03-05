@@ -8,6 +8,8 @@
 #include <iostream>
 #include <algorithm>
 #include <string.h>
+#include <stack>
+#include <assert.h>
 
 
 //翻转字符串函数 如：“12345”翻转成“54321”
@@ -47,7 +49,7 @@ void reverse_by_std(char* str, int n)
 	std::reverse(str, str + n);
 }
 
-/*
+/**
 判断对象申请在堆上还是栈上
 原理：局部变量onstack放在程序的栈顶，由于栈的结构是向下扩展（趋向于低地址）；且堆地址低于栈地址（依赖于os）
 	  当然无法详细区分静态数据和堆数据，两者都会返回True
@@ -60,7 +62,7 @@ bool OnHeap(const char* address)
 
 
 
-/*
+/**
 * 求数值的整数次方
 * 注意；1. double、float判断和0相等的方式；
 *      2. 注意考虑base为0的情况；
@@ -192,6 +194,98 @@ bool ReplaceSpace(char* src, int len)
 	return true;
 }
 
+/**
+ * 实现包含MIN函数的栈 即获取栈中最小元素 时间复杂度为O(1);
+ * 思路：借助STL中的stack实现；stack函数pop和push时间复杂度均为o(1);
+ *      如果单纯使用一个栈很难实现该功能，需要一个专门用于保存最小值的辅助栈
+ */
+template <typename T>
+class MinStack
+{
+public:
+    MinStack()
+    {
+
+    }
+    ~MinStack()
+    {
+
+    }
+    void Pop();
+    void Push(const T& value);
+    const T& Min() const ;
+
+private:
+    std::stack<T> stack_;
+    std::stack<T> min_stack_;
+};
+
+template <typename T>
+void MinStack<T>::Pop()
+{
+    assert(stack_.size() > 0 && min_stack_.size() > 0);
+    stack_.pop();
+    min_stack_.pop();
+}
+
+template <typename T>
+void MinStack<T>::Push(const T &value)
+{
+    stack_.push(value);
+    if (min_stack_.size() == 0 || min_stack_.top() > value)
+    {
+        min_stack_.push(value);
+    }
+    else
+    {
+        min_stack_.push(min_stack_.top());
+    }
+}
+
+template <typename T>
+const T& MinStack<T>::Min() const
+{
+    assert(min_stack_.size() > 0 && stack_.size() > 0);
+    return min_stack_.top();
+}
+
+/**
+ * 根据输入的入栈顺序，判断出栈顺序是否正常
+ */
+bool IsPopOrder(const int* push, const int* pop, int length)
+{
+    if (push == nullptr || pop == nullptr || length == 0)
+    {
+        return false;
+    }
+    bool ret = true;
+    std::stack<int> temp;
+    while (pop != nullptr)
+    {
+        if (temp.size() > 0 && *pop == temp.top())
+        {
+            ++pop;
+            temp.pop();
+            continue;
+        }
+        if (push == nullptr)
+        {
+            ret = false;
+            break;
+        }
+        while (push != nullptr)
+        {
+            temp.push(*push);
+            push++;
+            if (*pop == temp.top())
+            {
+
+                break;
+            }
+        }
+    }
+    return ret;
+}
 
 void TestFunc()
 {
@@ -203,5 +297,13 @@ void TestFunc()
 	char array[kLength] = { "we are so happy !" };
 	ReplaceSpace(array, kLength);
 	std::cout << array << std::endl;
+
+    std::stack<int> test;
+    test.push(1111);
+    std::cout << test.top() << std::endl;
+    int push[] = { 1, 2, 3, 4, 5 };
+    int pop[] = { 4, 5, 3, 2, 1 };
+    bool ret = IsPopOrder(push, pop, 5);
+    std::cout << ret  << std::endl;
 }
 #endif
