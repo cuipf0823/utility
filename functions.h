@@ -252,15 +252,17 @@ const T& MinStack<T>::Min() const
 /**
  * 根据输入的入栈顺序，判断出栈顺序是否正常
  */
-bool IsPopOrder(const int* push, const int* pop, int length)
+bool IsPopOrder(const int* push_order, const int* pop_order, int length)
 {
-    if (push == nullptr || pop == nullptr || length == 0)
+	if (push_order == nullptr || pop_order == nullptr || length == 0)
     {
         return false;
     }
     bool ret = true;
     std::stack<int> temp;
-    while (pop != nullptr)
+	const int* push = push_order;
+	const int* pop = pop_order;
+    while (pop -  pop_order < length)
     {
         if (temp.size() > 0 && *pop == temp.top())
         {
@@ -268,12 +270,12 @@ bool IsPopOrder(const int* push, const int* pop, int length)
             temp.pop();
             continue;
         }
-        if (push == nullptr)
+        if (push - push_order == length)
         {
             ret = false;
             break;
         }
-        while (push != nullptr)
+        while (push - push_order < length)
         {
             temp.push(*push);
             push++;
@@ -302,8 +304,16 @@ void TestFunc()
     test.push(1111);
     std::cout << test.top() << std::endl;
     int push[] = { 1, 2, 3, 4, 5 };
-    int pop[] = { 4, 5, 3, 2, 1 };
+    int pop[] = { 4, 5, 3, 1, 2 };
     bool ret = IsPopOrder(push, pop, 5);
-    std::cout << ret  << std::endl;
+	if (ret)
+	{
+		std::cout << "TRUE" << std::endl;
+	}
+	else
+	{
+		std::cout << "FLASE" << std::endl;
+	}
+   
 }
 #endif
