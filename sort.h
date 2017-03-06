@@ -59,7 +59,7 @@ void InsertSort(int* a, int len)
 
 //选择排序算法
 //原理:每次从乱序数组中找到最大（最小）的值，放在当前乱序数组头部，最终使数组有序
-//复杂度：最坏O(0^2);
+//复杂度：最坏O(n^2);
 void SelectSort(int* a, int len)
 {
 	for (int i = 0; i < len; ++i)
@@ -72,9 +72,12 @@ void SelectSort(int* a, int len)
 				min = j;
 			}
 		}
-		int temp = a[i];
-		a[i] = a[min];
-		a[min] = temp;
+		if (i != min)
+		{
+			int temp = a[i];
+			a[i] = a[min];
+			a[min] = temp;
+		}
 	}
 }
 
@@ -145,65 +148,54 @@ void Swap(int& a, int& b)
 	b = temp;
 }
 
-//快速排序 	选择一个基准数，把比这个数小的挪到左边 这个数大的移动到右边 然后不断对左右两边执行这个操作 知道数组有序
+//快速排序 	选择一个基准数，把比这个数小的挪到左边 这个数大的移动到右边 然后不断对左右两边执行这个操作 直到数组有序
 //时间复杂度：平均时间复杂度：O(nlog2n);
 void QuickSort(int* nums, int begin, int end)
 {
-	if (begin < end - 1)
+	if (begin < end)
 	{
-		int lb = begin, rb = end - 1;
-		while (lb < rb) 
-		{
-			while (nums[rb] >= nums[begin] && lb < rb)
-			{
-				rb--;
-			}
-			while (nums[lb] <= nums[begin] && lb < rb)
-			{
-				lb++;
-			}
-			Swap(nums[lb], nums[rb]);
-		}
-		Swap(nums[begin], nums[lb]);
+		int key = Partition(nums, begin, end);
 		QuickSort(nums, begin, lb);
 		QuickSort(nums, lb + 1, end);
 	}
 }
-
 /*
- * 快速排序非递归实现
- */
-void QuickSortN(int* nums, int begin, int end)
+*/
+int Partition(int* nums, int low, int high)
 {
-    if (nums == nullptr || begin >= end)
+	if (nums == nullptr || low >= high)
     {
         //input invaild
-        return;
+        return -1;
     }
-    int guard = nums[begin];
-    while (begin <= end)
+
+    int guard = nums[low];
+    while (low < high)
     {
-        while (begin < end && nums[end] >= guard)
+        while (low < high && nums[high] >= guard)
         {
-            --end;
+            --high;
         }
-        nums[begin] = nums[end];
-        while (begin < end && nums[begin] <= guard)
+		nums[low] = nums[high];
+        while (low < high && nums[low] <= guard)
         {
-            ++begin;
+            ++low;
         }
-        nums[end] = nums[begin];
+        nums[high] = nums[low];
     }
-    nums[begin] = guard;
+	nums[low] = guard;
+	return low;
 }
 
 void TestSort()
 {
 	int arr[] = { 4, 10, 23, 90, 29, 78, 100, 66 };
+	int arr1[] = { 90, 29, 78, 100, 66, 4, 10, 23};
 	int len = sizeof(arr) / sizeof(arr[0]);
 // 	BubbleSort(arr, len);
 // 	PrintArr(arr, len);
- 	QuickSort(arr, 0, len);
+	std::cout << QuickSortN(arr, 0, len) << std::endl;
+	std::cout << QuickSortN(arr1, 0, len) << std::endl;
  	PrintArr(arr, len);
 //	ShellSort(arr, len);
 }

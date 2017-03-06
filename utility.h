@@ -236,6 +236,7 @@ char& String::operator[](size_t index)
     return data_[index];
 }
 
+//常量对象调用该函数
 const char& String::operator[](size_t index) const
 {
 	assert(index < size_ - 1);
