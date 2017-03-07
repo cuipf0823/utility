@@ -20,7 +20,7 @@ set(SOURCE_FILES
         ${src_path}pool_memory.h
         ${src_path}pool_memory.cc
         ${src_path}utility.h
-        ${src_path}utility.cc
+        #${src_path}utility.cc
         ${src_path}unit_test.h
         ${src_path}common.cc
         ${src_path}list_op.h

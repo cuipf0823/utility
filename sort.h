@@ -150,13 +150,14 @@ void Swap(int& a, int& b)
 
 //快速排序 	选择一个基准数，把比这个数小的挪到左边 这个数大的移动到右边 然后不断对左右两边执行这个操作 直到数组有序
 //时间复杂度：平均时间复杂度：O(nlog2n);
+int Partition(int* nums, int low, int high);
 void QuickSort(int* nums, int begin, int end)
 {
 	if (begin < end)
 	{
 		int key = Partition(nums, begin, end);
-		QuickSort(nums, begin, lb);
-		QuickSort(nums, lb + 1, end);
+		QuickSort(nums, begin, key - 1);
+		QuickSort(nums, key + 1, end);
 	}
 }
 /*
@@ -176,12 +177,20 @@ int Partition(int* nums, int low, int high)
         {
             --high;
         }
-		nums[low] = nums[high];
-        while (low < high && nums[low] <= guard)
+        if (low < high)
+        {
+            nums[low] = nums[high];
+            ++low;
+        }
+        while (low < high && nums[low] < guard)
         {
             ++low;
         }
-        nums[high] = nums[low];
+        if (low < high)
+        {
+            nums[high] = nums[low];
+            --high;
+        }
     }
 	nums[low] = guard;
 	return low;
@@ -194,8 +203,8 @@ void TestSort()
 	int len = sizeof(arr) / sizeof(arr[0]);
 // 	BubbleSort(arr, len);
 // 	PrintArr(arr, len);
-	std::cout << QuickSortN(arr, 0, len) << std::endl;
-	std::cout << QuickSortN(arr1, 0, len) << std::endl;
+	QuickSort(arr, 0, len);
+	QuickSort(arr1, 0, len);
  	PrintArr(arr, len);
 //	ShellSort(arr, len);
 }
