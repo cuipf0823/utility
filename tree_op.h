@@ -11,6 +11,7 @@
  */
 
 #include <iostream>
+#include <queue>
 
 /*
  * 构造二叉树
@@ -30,7 +31,7 @@ BinaryTreeNode* ConstructCode(int* start_pre_order, int* end_pre_order, int* sta
     BinaryTreeNode* root = new BinaryTreeNode();
     root->value = root_value;
     root->left = root->right = nullptr;
-    std::cout << root->value << '\t';
+    //std::cout << root->value << '\t';
     if (start_pre_order == end_pre_order)
     {
         if (start_in_order == end_in_order && *start_in_order == *start_pre_order)
@@ -156,15 +157,47 @@ void MirrorReverse(BinaryTreeNode* proot)
     }
 }
 
+/*
+*	从上往下，从左至右打印一个二叉树
+*   借助队列（std::queue）完成
+*/
+
+void PrintTreeFromTopToBottom(BinaryTreeNode* tree)
+{
+	if (tree == nullptr)
+	{
+		return;
+	}
+	std::queue<BinaryTreeNode*> node_queue;
+	node_queue.push(tree);
+	while (!node_queue.empty())
+	{
+		BinaryTreeNode* node = node_queue.front();
+		std::cout << node->value << "\t";
+		if (node->left != nullptr)
+		{
+			node_queue.push(node->left);
+		}
+		if (node->right != nullptr)
+		{
+			node_queue.push(node->right);
+		}
+		node_queue.pop();
+	}
+	std::cout << std::endl;
+}
 
 
 void TestTreeOP()
 {
     int pre_order[] = { 1, 2, 4, 7, 3, 5, 6, 8 };
     int in_order[]  = { 4, 7, 2, 1, 5, 3, 8, 6 };
+	//post order =    { 7, 4, 2, 5, 8, 6, 3, 1 };
     int length = sizeof(pre_order) / sizeof(pre_order[0]);
     BinaryTreeNode* post_order = Construct(pre_order, in_order, length);
     PostOrderPrint(post_order);
+	std::cout << std::endl;
+	PrintTreeFromTopToBottom(post_order);
     //binary tree delete
 }
 

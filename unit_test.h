@@ -9,6 +9,7 @@
 #include "sort.h"
 #include "list_op.h"
 #include "tree_op.h"
+#include "utility.h"
 
 void TestInterator()
 {
@@ -89,7 +90,7 @@ void Test()
 	TestRevervse();
 	std::cout << "=================================" << std::endl;
 	TestLRU();
-	std::cout << "=================================" << std::endl;
+	std::cout << "==============Sort=================" << std::endl;
 	TestSort();
     TestSearch();
 	std::cout << "==============func================" << std::endl;
@@ -98,6 +99,9 @@ void Test()
     TestListOP();
     std::cout << "==============tree================" << std::endl;
     TestTreeOP();
+	std::cout << std::endl;
+	std::cout << "==============utility================" << std::endl;
+	utility_test::TestUtility();
 }
 
 #endif

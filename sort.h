@@ -103,30 +103,27 @@ void ShellSort(int* a, int len)
 //归并排序 将一个数组打散成小数组，然后把小数组拼凑再排序知道数组有序
 void MergeArray(int* nums, int begin, int mid, int end, int* temp)
 {
-	int lb = begin, rb = mid, tb = begin;
-	while (lb != mid && rb != end)
+	int low = begin;
+	int high = mid; 
+	int temp_idx = begin;
+	while (low != mid && high != end)
 	{
-		if (nums[lb] < nums[rb])
+		if (nums[low] < nums[high])
 		{
-			temp[tb++] = nums[lb++];
+			temp[temp_idx++] = nums[low++];
 		}
 		else
 		{
-			temp[tb++] = nums[rb++];
+			temp[temp_idx++] = nums[high++];
 		}
 	}
-	while (lb < mid)
+	while (low < mid)
 	{
-		temp[tb++] = nums[lb++];
+		temp[temp_idx++] = nums[low++];
 	}
-	while (rb < end)
+	while (high < end)
 	{
-		temp[tb++] = nums[rb++];
-	}
-
-	for (int i = begin; i < end; i++)
-	{
-		nums[i] = temp[i];
+		temp[temp_idx++] = nums[high++];
 	}
 }
 
@@ -156,11 +153,18 @@ void QuickSort(int* nums, int begin, int end)
 	if (begin < end)
 	{
 		int key = Partition(nums, begin, end);
-		QuickSort(nums, begin, key - 1);
-		QuickSort(nums, key + 1, end);
+		if (key - 1 > 0)
+		{
+			QuickSort(nums, begin, key - 1);
+		}
+		if (key + 1 < end)
+		{
+			QuickSort(nums, key + 1, end);
+		}
 	}
 }
 /*
+*	第一趟快速排序
 */
 int Partition(int* nums, int low, int high)
 {
@@ -203,9 +207,15 @@ void TestSort()
 	int len = sizeof(arr) / sizeof(arr[0]);
 // 	BubbleSort(arr, len);
 // 	PrintArr(arr, len);
-	QuickSort(arr, 0, len);
-	QuickSort(arr1, 0, len);
- 	PrintArr(arr, len);
+	ShellSort(arr, len);
+	ShellSort(arr1, len);
+//  	PrintArr(arr, len);
+// 	PrintArr(arr1, len);
+	const int kLen = 8;
+	int temp[kLen] = { 0 };
+	MergeSort(arr, 0, len, temp);
+	PrintArr(arr, len);
+	PrintArr(temp, kLen);
 //	ShellSort(arr, len);
 }
 
