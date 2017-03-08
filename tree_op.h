@@ -187,6 +187,93 @@ void PrintTreeFromTopToBottom(BinaryTreeNode* tree)
 	std::cout << std::endl;
 }
 
+/*
+ * 关于二叉排序树的插入、生成、查找
+ */
+
+/*
+ * 根据二叉排序树的性质，二叉排序树插入
+ */
+typedef BinaryTreeNode BSTree;
+void InsertBST(BSTree** tree, int key)
+{
+    //二叉排序树插入遇到tree的value和key相等 直接退出
+    BSTree* bstree = nullptr;
+    if (*tree == nullptr)
+    {
+        bstree = new BinaryTreeNode();
+        bstree->value = key;
+        bstree->left = nullptr;
+        bstree->right = nullptr;
+        *tree = bstree;
+    }
+    else if ((*tree)->value < key)
+    {
+        InsertBST(&((*tree)->right), key);
+    }
+    else if ((*tree)->value > key)
+    {
+        InsertBST(&((*tree)->left), key);
+    }
+}
+
+/*
+ * 创建二叉排序树
+ */
+void CreateBST(int* tree, int length)
+{
+    BSTree* bt = nullptr;
+    BSTree** bstree = &bt;
+    for (int index = 0; index < length; ++index)
+    {
+        InsertBST(bstree, tree[index]);
+    }
+}
+
+/*
+ * 二叉排序树 查找 递归
+ */
+
+BSTree* SearchBSTRe(BSTree* tree, int key)
+{
+    if (tree == nullptr)
+    {
+       return nullptr;
+    }
+    else if (tree->value < key)
+    {
+        return SearchBSTRe(tree->right, key);
+    }
+    else
+    {
+        return SearchBSTRe(tree->left, key);
+    }
+}
+
+/*
+ * Binary Sort Tree search  not recursion
+ */
+BSTree* SearchBST(BSTree* tree, int key)
+{
+    BSTree* temp = tree;
+    while (temp)
+    {
+        if (temp->value == key)
+        {
+            return temp;
+        }
+        else if (temp->value < key)
+        {
+            temp = temp->right;
+        }
+        else
+        {
+            temp = temp->left;
+        }
+    }
+    return nullptr;
+}
+
 
 void TestTreeOP()
 {
