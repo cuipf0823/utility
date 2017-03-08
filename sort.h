@@ -200,6 +200,79 @@ int Partition(int* nums, int low, int high)
 	return low;
 }
 
+
+/*
+* 堆属于二叉树，下面实现调整堆， 建初堆，堆排序
+*/
+/*
+* 调整堆
+* 参数：heap[begin, end]是以heap[begin]为根的完全二叉树；
+* 且分别以heap[2*begin] 和 [2*begin + 1]为根的左右子树为大根堆；
+* 调整heap[begin]使其符合大根堆;
+*/
+void AdjustHeap(int* heap, int begin, int end)
+{
+	if (heap == nullptr || begin >= end)
+	{
+		return;
+	}
+	int root_value = heap[begin];
+	int root = begin;
+	int child = root * 2;
+	bool finish = false;
+	while (child <= end && !finish)
+	{
+		if (child < end && heap[child] < heap[child + 1])
+		{
+			++child;
+		}
+		if (root_value >= heap[child])
+		{
+			finish = true;
+		}
+		else
+		{
+			heap[root] = heap[child];
+			root = child;
+			child = root * 2;
+		}
+	}
+	heap[root] = root_value;
+	//PrintArr(heap, end + 1);
+}
+
+/*
+* 建初堆
+*/
+void CreateHeap(int* heap, int length)
+{
+	if (heap == nullptr || length == 0)
+	{
+		return;
+	}
+	//从length / 2个记录开始进行筛选建堆
+	for (int index = length / 2; index >= 0; --index)
+	{
+		AdjustHeap(heap, index, length - 1);
+	}
+}
+
+/*
+*	堆排序 时间复杂度: 平均最好最坏都是O(log2n)
+*/
+void SortHeap(int* heap, int length)
+{
+	int mid = length / 2;
+	for (int index = length - 1; index >= 1; --index)
+	{
+		//根节点和尾节点交换
+		int temp = heap[0];
+		heap[0] = heap[index];
+		heap[index] = temp;
+		AdjustHeap(heap, 0, index - 1);
+	}
+}
+
 void TestSort()
 {
 	int arr[] = { 4, 10, 23, 90, 29, 78, 100, 66 };
@@ -209,7 +282,7 @@ void TestSort()
 // 	PrintArr(arr, len);
 	ShellSort(arr, len);
 	ShellSort(arr1, len);
-//  	PrintArr(arr, len);
+//  PrintArr(arr, len);
 // 	PrintArr(arr1, len);
 	const int kLen = 8;
 	int temp[kLen] = { 0 };
@@ -217,6 +290,14 @@ void TestSort()
 	PrintArr(arr, len);
 	PrintArr(temp, kLen);
 //	ShellSort(arr, len);
+
+	//堆相关
+	int heap[kLen] = { 48, 62, 35, 77, 55, 14, 35, 98 };
+	CreateHeap(heap, kLen);
+	PrintArr(heap, kLen);
+	SortHeap(heap, kLen);
+	PrintArr(heap, kLen);
+
 }
 
 

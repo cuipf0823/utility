@@ -27,7 +27,7 @@ struct BinaryTreeNode
 BinaryTreeNode* ConstructCode(int* start_pre_order, int* end_pre_order, int* start_in_order, int* end_in_order)
 {
     //前序遍历的第一个数字是根节点的值
-    int root_value = start_in_order[0];
+	int root_value = start_pre_order[0];
     BinaryTreeNode* root = new BinaryTreeNode();
     root->value = root_value;
     root->left = root->right = nullptr;
@@ -159,7 +159,7 @@ void MirrorReverse(BinaryTreeNode* proot)
 
 /*
 *	从上往下，从左至右打印一个二叉树
-*   借助队列（std::queue）完成
+*   借助队列（std::queue）完成 根节出队，打印，根节点左右子节点进队
 */
 
 void PrintTreeFromTopToBottom(BinaryTreeNode* tree)
@@ -192,13 +192,15 @@ void TestTreeOP()
 {
     int pre_order[] = { 1, 2, 4, 7, 3, 5, 6, 8 };
     int in_order[]  = { 4, 7, 2, 1, 5, 3, 8, 6 };
-	//post order =    { 7, 4, 2, 5, 8, 6, 3, 1 };
+//  int post order =  { 7, 4, 2, 5, 8, 6, 3, 1 };
     int length = sizeof(pre_order) / sizeof(pre_order[0]);
     BinaryTreeNode* post_order = Construct(pre_order, in_order, length);
     PostOrderPrint(post_order);
 	std::cout << std::endl;
 	PrintTreeFromTopToBottom(post_order);
+
     //binary tree delete
+
 }
 
 #endif //COMMON_TREE_OP_H
