@@ -289,6 +289,49 @@ bool IsPopOrder(const int* push_order, const int* pop_order, int length)
     return ret;
 }
 
+/*
+*  判断是小端字节序还是大端字节序
+*/
+void CheckEndian()
+{
+	uint32_t num = 0;
+	uint32_t* p = &num;
+	*reinterpret_cast<unsigned char*>(p) = 0xff;
+	if (num == 0xff)
+	{
+		std::cout << "little endian" << std::endl;
+	}
+	else
+	{
+		//num = 0xff00 0000
+		std::cout << "big endian" << std::endl;
+	}
+}
+
+void CheckEndian1()
+{
+	union Test
+	{
+		int a;
+		char b;
+	};
+	
+	Test test;
+	test.a = 1;
+	if (test.b == 1)
+	{
+		std::cout << "little endian" << std::endl;
+	}
+	else
+	{
+		//num = 0xff00 0000
+		std::cout << "big endian" << std::endl;
+	}
+}
+
+
+
+
 void TestFunc()
 {
 	std::cout << Power(2.0, 4) << std::endl;
@@ -314,6 +357,8 @@ void TestFunc()
 	{
 		std::cout << "FLASE" << std::endl;
 	}
+	CheckEndian();
+	CheckEndian1();
    
 }
 #endif

@@ -195,6 +195,7 @@ void PrintTreeFromTopToBottom(BinaryTreeNode* tree)
  * 根据二叉排序树的性质，二叉排序树插入
  */
 typedef BinaryTreeNode BSTree;
+typedef BSTree BSNode;
 void InsertBST(BSTree** tree, int key)
 {
     //二叉排序树插入遇到tree的value和key相等 直接退出
@@ -273,6 +274,62 @@ BSTree* SearchBST(BSTree* tree, int key)
     }
     return nullptr;
 }
+
+/*
+*	二叉排序树转换成双向链表且不创建任何节点
+*	分析: 1. 二叉排序树中序遍历后得到是有序排列
+*         2. 原先指向左子结点的指针调整为链表中指向前一个结点的指针，
+*            原先指向右子结点的指针调整为链表中指向下一个结点的指针
+*/
+BSNode* FindMostLeftNode(BSTree* tree)
+{
+	if (tree == nullptr)
+	{
+		return nullptr;
+	}
+	while (tree->left != nullptr)
+	{
+		tree = tree->left;
+	}
+	return tree;
+}
+
+void ConvertNode(BSTree* tree, BSNode** last_node)
+{
+	if (tree == nullptr)
+	{
+		return;
+	}
+	if (tree->left != nullptr)
+	{
+		ConvertNode(tree->left, last_node);
+	}
+	tree->left = *last_node;
+	if (*last_node != nullptr)
+	{
+		(*last_node)->right = tree;
+	}
+	*last_node = tree;
+	if (tree->right != nullptr)
+	{
+		ConvertNode(tree->right, last_node);
+	}
+}
+
+typedef BinaryTreeNode DLList;
+DLList* BSTreeToDLList(BSTree* tree)
+{
+	if (tree == nullptr)
+	{
+		return nullptr;
+	}
+	DLList* head = FindMostLeftNode(tree);
+	BSNode* last_node = nullptr;
+	ConvertNode(tree, &last_node);
+	return head;
+}
+
+
 
 
 void TestTreeOP()

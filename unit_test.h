@@ -10,6 +10,7 @@
 #include "list_op.h"
 #include "tree_op.h"
 #include "utility.h"
+#include "com_algorithm.h"
 
 void TestInterator()
 {
@@ -89,7 +90,7 @@ void Test()
 	TestPoolMemory();
 	TestRevervse();
 	std::cout << "=================================" << std::endl;
-	TestLRU();
+	//TestLRU();
 	std::cout << "==============Sort=================" << std::endl;
 	TestSort();
     TestSearch();
@@ -102,6 +103,9 @@ void Test()
 	std::cout << std::endl;
 	std::cout << "==============utility================" << std::endl;
 	utility_test::TestUtility();
+	std::cout << "==============algorithm================" << std::endl;
+	alg::Test_Agl();
+
 }
 
 #endif
