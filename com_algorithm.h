@@ -18,21 +18,28 @@ void Swap(char* a, char* b)
 }
 
 /*
-http://wuchong.me/blog/2014/07/28/permutation-and-combination-realize/
+*  输入字符串 打印字符串的全排序
+*  例如: adc 则打印顺序为 abc acb bac bca cba cab
 */
-void Permutation(char* str, size_t begin, int length)
+void Permutation(char* str, char* begin)
 {
-	if (begin == length - 1)
+	if (*begin == '\0')
 	{
 		std::cout << str << std::endl;
 	}
 	else
 	{
-		for (int idx = 0; idx < length; ++idx)
+		for (char* ch = begin; *ch != '\0'; ++ch)
 		{
-			Swap(&str[begin], &str[idx]);
-			Permutation(str, begin + 1, length);
-			Swap(&str[begin], &str[idx]);
+			if (*ch != *begin)
+			{
+				Swap(ch, begin);
+			}
+			Permutation(str, begin + 1);
+			if (*ch != *begin)
+			{
+				Swap(ch, begin);
+			}
 		}
 	}
 }
@@ -42,13 +49,18 @@ void Permutation(char* str)
 	{
 		return;
 	}
-	Permutation(str, 0, strlen(str));
+	Permutation(str, str);
 }
 
 void Test_Agl()
 {
-	const char* str = "123";
-	Permutation(const_cast<char*>(str));
+	const char* str = "abcc";
+	char* ch = new char[strlen(str) + 1];
+	strcpy(ch, str);
+	//这样传递是错的,你看到你传递指针是常量区的
+	//Permutation(const_cast<char*>(str));
+	Permutation(ch);
+	delete[] ch;
 }
 
 
