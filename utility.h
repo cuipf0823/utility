@@ -319,7 +319,7 @@ bool operator==(const String& lhs, const String& rhs)
 	{
 		return false;
 	}
-	return strcmp(lhs.c_str(), rhs.c_str()) ? false : true;
+	return strcmp(lhs.c_str(), rhs.c_str()) == 0 ? false : true;
 }
 
 bool operator!=(const String& lhs, const String& rhs)
@@ -328,8 +328,86 @@ bool operator!=(const String& lhs, const String& rhs)
 }
 
 
+/*
+ * 下面的类主要用于测试其他几种操作符的重载
+ */
 
+class DInt
+{
+public:
+	DInt(int i):imem_(i)
+	{
 
+	}
+	//prefix increment 如果想要阻止++++i这种行为就返回const DInt& 即可
+	DInt& operator++()
+	{
+		++(this->imem_);
+		return *this;
+	}
+
+    //prefix decrement
+	DInt& operator--()
+	{
+		--(this->imem_);
+		return *this;
+	}
+
+	//postfix increment 如果想要阻止i++++这种行为就返回const DInt 即可
+    DInt operator++(int)
+    {
+        DInt temp = *this;
+        ++(*this);
+        return temp;
+    }
+
+    //postfix decrement
+    DInt operator--(int)
+    {
+        DInt temp = *this;
+        --(*this);
+        return temp;
+    }
+
+    //dereference
+    int& operator*() const
+    {
+        return (int&)(imem_);
+    }
+
+    int* operator->() const
+    {
+        return & this->operator*();
+    }
+
+    const int& imem() const
+    {
+        return imem_;
+    }
+    //operator ()
+    void operator()()
+    {
+        std::cout << imem_ << std::endl;
+    }
+
+    friend std::ostream& operator<<(std::ostream& os, DInt i);
+private:
+	int imem_;
+};
+
+std::ostream& operator<<(std::ostream& os, DInt i)
+{
+    os << *i << std::endl;
+    return os;
+}
+
+/*
+std::ostream& operator<<(std::ostream& os, DInt& i)
+{
+    os << *i << std::endl;
+    return os;
+}
+*/
 
 namespace utility_test
 {
@@ -378,6 +456,18 @@ namespace utility_test
 		int b = 10;
 		std::cout << a++ + b << std::endl;
 		std::cout << a << std::endl;
+
+
+        DInt in(10);
+        DInt* pin = &in;
+        std::cout << in++++ << std::endl;
+        std::cout << pin->imem() << std::endl;
+
+        in();
+        DInt(10000)();
+        int i = 100;
+        std::cout << ++i << std::endl;
+
  	}
 }
 
