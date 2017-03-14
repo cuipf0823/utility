@@ -41,7 +41,7 @@ void TestInterator()
 
 void TestPoolMemory()
 {
-	const size_t kSize = 32;
+	const size_t kSize = 50;
 	PoolMemory<char> pool;
 	char* p_new = pool.Allocate(kSize);
 	pool.Deallocate(p_new, kSize);

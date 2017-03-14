@@ -12,6 +12,7 @@ PoolMemoryBase::Obj* volatile* PoolMemoryBase::GetFreeList(size_t bytes)
 	return free_list_ + idx;
 }
 
+
 void* PoolMemoryBase::ReFill(size_t n)
 {
 	int nobjs = 20;
@@ -46,7 +47,11 @@ void* PoolMemoryBase::ReFill(size_t n)
 	}
 	return result;
 }
-
+/*
+*	逻辑: 假设程序一开始的时候,客户申请AllocateChunk(56,20);那么就会直接在堆上申请40个56bytes的区块;
+*   其中第1个交出供客户端使用,另外19个会挂载在free_list[6]上面,其他的20个留给内存池使用;
+*   如果接下来客户端又调用AllocateChunk(32, 20)发现free_list[3]上面空空如也,必须向内存池要求支持; 如此往复
+*/
 char* PoolMemoryBase::AllocateChunk(size_t n, int& nobjs)
 {
 	char* result = nullptr;
