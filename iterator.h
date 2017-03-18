@@ -123,6 +123,7 @@ public:
 	{
 
 	}
+	//不必实现copy ctor,operator=这些函数,编译器提供的缺省行为已经足够了
 
 	T& operator*() const
 	{
