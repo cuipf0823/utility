@@ -1,5 +1,5 @@
 #include "dcl_List.h"
-#include <algorithm> 
+#include <algorithm>
 
 namespace dcl_list
 {
@@ -52,7 +52,7 @@ void ListNodeBase::Translate(ListNodeBase* const first, ListNodeBase* const last
 void ListNodeBase::Reverse() noexcept
 {
 	ListNodeBase* tmp = this;
-	do 
+	do
 	{
 		std::swap(tmp->next, tmp->prev);
 		tmp = tmp->prev;

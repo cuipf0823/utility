@@ -1,13 +1,13 @@
 /*
-*	�������������㷨ʵ��
-*	���������㷨ʵ��
-*   �������㷨
+*	常见几种排序算法实现
+*	常见查找算法实现
+*   常见的算法
 */
 #ifndef COMMON_SORT_H
 #define COMMON_SORT_H
 #include <iostream>
 
-//�����ӡ����
+//数组打印函数
 void PrintArr(int arr[], int len)
 {
 	for (int i = 0; i < len; ++i)
@@ -17,7 +17,7 @@ void PrintArr(int arr[], int len)
 	std::cout << std::endl;
 }
 
-//ð������ ��������Ԫ�رȽ� ʱ�临�Ӷȣ����O(n^2)	��õ������O(n)
+//冒泡排序 相邻两个元素比较 时间复杂度：最坏是O(n^2)	最好的情况下O(n)
 void  BubbleSort(int* a, int len)
 {
 	for (int i = 0; i < len; ++i)
@@ -40,14 +40,14 @@ void  BubbleSort(int* a, int len)
 	}
 }
 
-//ֱ�Ӳ��������㷨 ���������ǽ�һ����¼���뵽�Ѿ��ź����������У��Ӷ��ȵ�һ���µģ�Ԫ�ؼ�1������� ֪��������
-//ʱ�临�Ӷȣ����O(n^2)	��õ������O(n)
+//直接插入排序算法 基本操作是将一个记录插入到已经排好序的有序表中，从而等到一个新的，元素加1的有序表 知道结束；
+//时间复杂度：最坏是O(n^2)	最好的情况下O(n)
 void InsertSort(int* a, int len)
 {
 	int idx = 0;
 	int temp = 0;
 	for (int i = 1; i < len; ++i)
-	{	
+	{
 		temp = a[i];
 		for (idx = i - 1; idx >= 0 && a[idx] > temp; --idx)
 		{
@@ -57,9 +57,9 @@ void InsertSort(int* a, int len)
 	}
 }
 
-//ѡ�������㷨
-//ԭ��:ÿ�δ������������ҵ������С����ֵ�����ڵ�ǰ��������ͷ��������ʹ��������
-//���Ӷȣ��O(n^2);
+//选择排序算法
+//原理:每次从乱序数组中找到最大（最小）的值，放在当前乱序数组头部，最终使数组有序
+//复杂度：最坏O(n^2);
 void SelectSort(int* a, int len)
 {
 	for (int i = 0; i < len; ++i)
@@ -81,8 +81,8 @@ void SelectSort(int* a, int len)
 	}
 }
 
-//shell����  ϣ�������ǽ����鰴��һ�������ֳɼ����������������ͨ�������̲����������������
-//ʱ�临�Ӷȣ�O(nlogn) ~~ O(n^2);
+//shell排序  希尔排序是将数组按照一定步长分成几个子数组进行排序，通过逐渐缩短步长来完成最终排序
+//时间复杂度：O(nlogn) ~~ O(n^2);
 void ShellSort(int* a, int len)
 {
 	for (int gap = len >> 1; gap > 0; gap >>= 1)
@@ -100,11 +100,11 @@ void ShellSort(int* a, int len)
 	}
 }
 
-//�鲢���� ��һ�������ɢ��С���飬Ȼ���С����ƴ��������֪����������
+//归并排序 将一个数组打散成小数组，然后把小数组拼凑再排序知道数组有序
 void MergeArray(int* nums, int begin, int mid, int end, int* temp)
 {
 	int low = begin;
-	int high = mid; 
+	int high = mid;
 	int temp_idx = begin;
 	while (low != mid && high != end)
 	{
@@ -130,7 +130,7 @@ void MergeArray(int* nums, int begin, int mid, int end, int* temp)
 void MergeSort(int* nums, int begin, int end, int* temp)
 {
 	int mid = (begin + end) / 2;
-	if (mid != begin) 
+	if (mid != begin)
 	{
 		MergeSort(nums, begin, mid, temp);
 		MergeSort(nums, mid, end, temp);
@@ -145,8 +145,8 @@ void Swap(int& a, int& b)
 	b = temp;
 }
 
-//�������� 	ѡ��һ����׼�����ѱ������С��Ų����� ���������ƶ����ұ� Ȼ�󲻶϶���������ִ��������� ֱ����������
-//ʱ�临�Ӷȣ�ƽ��ʱ�临�Ӷȣ�O(nlog2n);
+//快速排序 	选择一个基准数，把比这个数小的挪到左边 这个数大的移动到右边 然后不断对左右两边执行这个操作 直到数组有序
+//时间复杂度：平均时间复杂度：O(nlog2n);
 int Partition(int* nums, int low, int high);
 void QuickSort(int* nums, int begin, int end)
 {
@@ -164,7 +164,7 @@ void QuickSort(int* nums, int begin, int end)
 	}
 }
 /*
-*	��һ�˿�������
+*	第一趟快速排序
 */
 int Partition(int* nums, int low, int high)
 {
@@ -202,13 +202,13 @@ int Partition(int* nums, int low, int high)
 
 
 /*
-* �����ڶ�����������ʵ�ֵ����ѣ� �����ѣ�������
+* 堆属于二叉树，下面实现调整堆， 建初堆，堆排序
 */
 /*
-* ������
-* ������heap[begin, end]����heap[begin]Ϊ������ȫ��������
-* �ҷֱ���heap[2*begin] �� [2*begin + 1]Ϊ������������Ϊ����ѣ�
-* ����heap[begin]ʹ����ϴ����;
+* 调整堆
+* 参数：heap[begin, end]是以heap[begin]为根的完全二叉树；
+* 且分别以heap[2*begin] 和 [2*begin + 1]为根的左右子树为大根堆；
+* 调整heap[begin]使其符合大根堆;
 */
 void AdjustHeap(int* heap, int begin, int end)
 {
@@ -242,7 +242,7 @@ void AdjustHeap(int* heap, int begin, int end)
 }
 
 /*
-* ������
+* 建初堆
 */
 void CreateHeap(int* heap, int length)
 {
@@ -250,7 +250,7 @@ void CreateHeap(int* heap, int length)
 	{
 		return;
 	}
-	//��length / 2����¼��ʼ����ɸѡ����
+	//从length / 2个记录开始进行筛选建堆
 	for (int index = length / 2; index >= 0; --index)
 	{
 		AdjustHeap(heap, index, length - 1);
@@ -258,14 +258,14 @@ void CreateHeap(int* heap, int length)
 }
 
 /*
-*	������ ʱ�临�Ӷ�: ƽ����������O(log2n)
+*	堆排序 时间复杂度: 平均最好最坏都是O(log2n)
 */
 void SortHeap(int* heap, int length)
 {
 	int mid = length / 2;
 	for (int index = length - 1; index >= 1; --index)
 	{
-		//���ڵ��β�ڵ㽻��
+		//根节点和尾节点交换
 		int temp = heap[0];
 		heap[0] = heap[index];
 		heap[index] = temp;
@@ -291,7 +291,7 @@ void TestSort()
 	PrintArr(temp, kLen);
 //	ShellSort(arr, len);
 
-	//�����
+	//堆相关
 	int heap[kLen] = { 48, 62, 35, 77, 55, 14, 35, 98 };
 	CreateHeap(heap, kLen);
 	PrintArr(heap, kLen);
@@ -305,11 +305,11 @@ void TestSort()
  * *************************************************************
  */
 
-//���������㷨
+//常见查找算法
 
 /*
- * 1. ˳������㷨  ������ң��������Բ��� �����е�һ�˿�ʼһ�α���
- * ʱ�临�Ӷȣ�O(n)
+ * 1. 顺序查找算法  无序查找，属于线性查找 从序列到一端开始一次遍历
+ * 时间复杂度：O(n)
  */
 
 int SequenceSearch(int arr[], int length, int value)
@@ -326,11 +326,11 @@ int SequenceSearch(int arr[], int length, int value)
 }
 
 /*
- * 2. ���ֲ����㷨���۰���ң�
- * ˼�룺���ݸ�����ֵ�����е�ֵ�Աȣ���� �ҵ������� �����β������������У�
- * ע�⣺1. ���ֲ��ҵ����б���Ϊ�������У����������Ļ���������
- * 		 2. ���ڲ���ɾ��Ƶ���Ķ��У�ά��������гɱ��ϸߣ�������ʹ�ã�
- * ʱ�临�Ӷȣ���ǣ�O(log2(n + 1)); ƽ����O(log2n)
+ * 2. 二分查找算法（折半查找）
+ * 思想：根据给定的值和序列的值对比，相等 找到；不等 再依次查找左右子序列；
+ * 注意：1. 二分查找的序列必须为有序序列，如果是无序的话，先排序；
+ * 		 2. 对于插入删除频繁的队列，维护有序队列成本较高，不建议使用；
+ * 时间复杂度：最坏是：O(log2(n + 1)); 平均：O(log2n)
  */
 
 int BinarySearch(int arr[], int length, int value)
@@ -380,10 +380,10 @@ int BinarySearchRe(int arr[], int low, int high, int value)
 }
 
 /*
-*	3. ��ֵ�����㷨
-*   ˼�룺���ڶ��ֲ����㷨�����ݲ��ҵ��������еĴ��λ�ã������ҵ��޸�Ϊ����Ӧ�ģ���߲���Ч�ʣ�
-*	ע: ���ڱ����ϴ󣬶���Ԫ�طֲ��ȽϾ��ȵı���˵�����㷨ƽ�����ܱȶ��ֲ���Ҫ�úܶ࣬��֮����һ������
-*	ʱ�临�Ӷȣ����ҳɹ�����ʧ�ܵ�ʱ�临�ӶȾ�ΪO(log2(log2n))
+*	3. 插值查找算法
+*   思想：基于二分查找算法，根据查找点在序列中的大概位置，将查找点修改为自适应的，提高查找效率；
+*	注: 对于表长较大，而且元素分布比较均匀的表来说，该算法平均性能比二分查找要好很多，反之，不一定合适
+*	时间复杂度：查找成功或者失败的时间复杂度均为O(log2(log2n))
 */
 int InsertionSearch(int arr[], int length, int value)
 {
@@ -421,8 +421,8 @@ void TestSearch()
 
 
 /**
- *	쳲���������ļ��������ʽ
- *  Ч�ʵ�
+ *	斐波那契数组的计算迭代方式
+ *  效率低
  */
 long long FabonnacciRe(uint32_t n)
 {

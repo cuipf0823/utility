@@ -1,7 +1,7 @@
 /*
-*   1. Ä£ÄâstlÖĞlistµÄÊµÏÖ£¬ÊìÏ¤Ë«ÏòÑ­»·Á´±íµÄÊµÏÖ£»
-*   2. ÄÚ´æÉêÇëÊ¹ÓÃpool_memory£»
-*	3. ÊµÏÖ²Ù×÷Ë«ÏòÑ­»·Á´±íµÄ»ù±¾²Ù×÷£»
+*   1. æ¨¡æ‹Ÿstlä¸­listçš„å®ç°ï¼Œç†Ÿæ‚‰åŒå‘å¾ªç¯é“¾è¡¨çš„å®ç°ï¼›
+*   2. å†…å­˜ç”³è¯·ä½¿ç”¨pool_memoryï¼›
+*	3. å®ç°æ“ä½œåŒå‘å¾ªç¯é“¾è¡¨çš„åŸºæœ¬æ“ä½œï¼›
 */
 #ifndef DCL_LIST_H
 #define DCL_LIST_H
@@ -23,7 +23,7 @@ struct ListNodeBase
 };
 
 template<typename T>
-struct ListNode : public ListNodeBase  
+struct ListNode : public ListNodeBase
 {
 	T data;
 	template<typename... Args>

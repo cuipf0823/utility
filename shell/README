@@ -1,0 +1,5 @@
+# 介绍
+把当前目录中的proto文件,生成C++, java等语音可以使用的源文件;
+# 使用
+* 默认直接执行脚本, 生成C++相应源文件***.pb.cc** 和 ***.pb.h**;
+* 执行脚本时, 添加参数java生成java相对应protobuf的源文件; 添加参数python生成python相对应的protobuf的源文件;

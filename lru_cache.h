@@ -1,8 +1,8 @@
 /*
-* least recently useds 
-* ²Î¿¼leveldbÖĞlruËã·¨£¬Ê¹ÓÃstl¼ò»¯lruËã·¨µÄÊµÏÖ
-* 1. Ê¹ÓÃlistºÍunordered_mapÊµÏÖlruËã·¨£¬Ê¹µÃ²éÕÒÉ¾³ıĞ§ÂÊÎªo(1);
-* 2. Key, Value±ØĞëÊÇ¹æÔòÀàĞÍ£¬ÇÒKeyÀàĞÍ±ØĞëÊÇÄÚÖÃÀàĞÍ»òÕßÖØÔØÁËoperator==, ÇÒ¸ÃÀàĞÍ±ØĞëÌá¹©std::hash<>ÌØÀı»¯
+* least recently useds
+* å‚è€ƒleveldbä¸­lruç®—æ³•ï¼Œä½¿ç”¨stlç®€åŒ–lruç®—æ³•çš„å®ç°
+* 1. ä½¿ç”¨listå’Œunordered_mapå®ç°lruç®—æ³•ï¼Œä½¿å¾—æŸ¥æ‰¾åˆ é™¤æ•ˆç‡ä¸ºo(1);
+* 2. Key, Valueå¿…é¡»æ˜¯è§„åˆ™ç±»å‹ï¼Œä¸”Keyç±»å‹å¿…é¡»æ˜¯å†…ç½®ç±»å‹æˆ–è€…é‡è½½äº†operator==, ä¸”è¯¥ç±»å‹å¿…é¡»æä¾›std::hash<>ç‰¹ä¾‹åŒ–
 */
 
 #ifndef LRU_CACHE_H
@@ -23,8 +23,8 @@ public:
 	{
 		Key key;
 		Value value;
-		size_t refs = 2;	 //ÒıÓÃ¼ÆÊı ³õÊ¼Îª2 Ò»¸ö¸øÄÚ²¿Ê¹ÓÃ Ò»¸ö¸øÍâ²¿
-		size_t charge;       //Á£¶È
+		size_t refs = 2;	 //å¼•ç”¨è®¡æ•° åˆå§‹ä¸º2 ä¸€ä¸ªç»™å†…éƒ¨ä½¿ç”¨ ä¸€ä¸ªç»™å¤–éƒ¨
+		size_t charge;       //ç²’åº¦
 		LRUHandle(const Key& k, const Value& v, size_t c) :
 			key(k),
 			value(v),
@@ -67,7 +67,7 @@ public:
 private:
 	size_t usage_;
 	size_t capacity_;
-	CacheList lru_;	//list µÚÒ»¸öÔªËØÊÇ×î½ü×îÉÙÊ¹ÓÃÔªËØ£¬×îºóÒ»¸öÔªËØÊÇ×îĞÂÔªËØ
+	CacheList lru_;	//list ç¬¬ä¸€ä¸ªå…ƒç´ æ˜¯æœ€è¿‘æœ€å°‘ä½¿ç”¨å…ƒç´ ï¼Œæœ€åä¸€ä¸ªå…ƒç´ æ˜¯æœ€æ–°å…ƒç´ 
 	CacheTable table_;
 };
 
@@ -84,7 +84,7 @@ void LRUCache<Key, Value>::Debug()
 }
 
 template<typename Key, typename Value>
-typename LRUCache<Key, Value>::LRUHandle* 
+typename LRUCache<Key, Value>::LRUHandle*
 LRUCache<Key, Value>::Insert(const Key& key, const Value& value, size_t charge /*= 1*/)
 {
 	LRUHandle* handle = new LRUHandle(key, value, charge);
@@ -92,20 +92,20 @@ LRUCache<Key, Value>::Insert(const Key& key, const Value& value, size_t charge /
 	typename CacheTable::iterator iter = table_.find(key);
 	if (iter != table_.end())
 	{
-		//²åÈë½ÚµãÒÑ¾­´æÔÚ£¬ÏÈÉ¾³ı
+		//æ’å…¥èŠ‚ç‚¹å·²ç»å­˜åœ¨ï¼Œå…ˆåˆ é™¤
 		typename CacheList::iterator it = iter->second;
 		lru_.erase(it);
 		table_.erase(iter);
 		Release(*it);
 	}
-	//²åÈëĞÂµÄ½Úµã
+	//æ’å…¥æ–°çš„èŠ‚ç‚¹
 	typename CacheList::iterator pos = lru_.insert(lru_.begin(), handle);
 	if (!table_.insert(std::make_pair(key, pos)).second)
 	{
 		assert(false);
 	}
 	usage_ += charge;
-	//µ±Ç°ÈİÆ÷ÄÚÔªËØÁ£¶È´óÓÚÉè¶¨Öµ£¬É¾³ı×î³¤Ê±¼äÎ´Ê¹ÓÃµÄÔªËØ Ñ­»·±£Ö¤ÔªËØ´ÓÄÚ´æÇåÀí
+	//å½“å‰å®¹å™¨å†…å…ƒç´ ç²’åº¦å¤§äºè®¾å®šå€¼ï¼Œåˆ é™¤æœ€é•¿æ—¶é—´æœªä½¿ç”¨çš„å…ƒç´  å¾ªç¯ä¿è¯å…ƒç´ ä»å†…å­˜æ¸…ç†
 	while (usage_ > capacity_ && !lru_.empty())
 	{
 		LRUHandle* back = lru_.back();
@@ -126,7 +126,7 @@ typename LRUCache<Key, Value>::LRUHandle* LRUCache<Key, Value>::Lookup(const Key
 	}
 	typename CacheList::iterator it = iter->second;
 	LRUHandle* handle = *(iter->second);
-	
+
 	if (it != lru_.begin())
 	{
 		lru_.erase(it);

@@ -204,7 +204,7 @@ ListNode* FindNodeFromTail(ListNode* list, uint32_t k)
 
 /*
 *  单链表的逆转
-*  需要三个指针：1. 指向node一个指针 指向node->next一个指针，指向逆序队列一个指针 
+*  需要三个指针：1. 指向node一个指针 指向node->next一个指针，指向逆序队列一个指针
 */
 ListNode* ListReverse(ListNode* list)
 {

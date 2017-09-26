@@ -1,5 +1,5 @@
 /*
-*  ¼ÇÂ¼Ò»Ð©³£ÓÃµÄËã·¨
+*  è®°å½•ä¸€äº›å¸¸ç”¨çš„ç®—æ³•
 */
 #ifndef COMMON_ALGORITHM_H
 #define COMMON_ALGORITHM_H
@@ -18,8 +18,8 @@ void Swap(char* a, char* b)
 }
 
 /*
-*  ÊäÈë×Ö·û´® ´òÓ¡×Ö·û´®µÄÈ«ÅÅÐò
-*  ÀýÈç: adc Ôò´òÓ¡Ë³ÐòÎª abc acb bac bca cba cab
+*  è¾“å…¥å­—ç¬¦ä¸² æ‰“å°å­—ç¬¦ä¸²çš„å…¨æŽ’åº
+*  ä¾‹å¦‚: adc åˆ™æ‰“å°é¡ºåºä¸º abc acb bac bca cba cab
 */
 void Permutation(char* str, char* begin)
 {
@@ -53,14 +53,14 @@ void Permutation(char* str)
 }
 
 /*
-*  Êý×éÖÐ³öÏÖ´ÎÊý³¬¹ýÒ»°ëµÄÊý×Ö
-*  Ëã·¨: ÀûÓÃÕÛ°ë·½·¨¿ÉÒÔÊµÏÖ,µ«ÕâÀïÊ¹ÓÃÁíÍâÒ»ÖÖ·½Ê½:
-*  Êý×éÖÐÓÐÒ»¸öÊý×Ö³öÏÖµÄ´ÎÊý±ÈÆäËûËùÓÐÊý×Ö³öÏÖ´ÎÊýµÄºÍ»¹Òª¶à,±éÀúÊý×é±£´æÁ½¸öÖµ:
-*  1. Êý×éÖÐµÄÒ»¸öÊý×Ö;
-*  2. Ò»¸öÊÇ´ÎÊý
-*  ±éÀúÊ±:Èç¹ûºÍ±£´æÊý×ÖÒ»Ñù,´ÎÊý + 1;²»Í¬µÄ»° -1;´ÎÊýÎª0Ê±ºò,¸ü»»±£´æÊý×Ö,ÇÒ´ÎÊý=1
-*  ×îºóµÄ½á¹û:Ò»¶¨ÊÇ°Ñ´ÎÊýÉèÖÃÎª1Ê±¶ÔÓ¦µÄÊý×Ö
-*  Ê±¼ä¸´ÔÓ¶È: o(n)
+*  æ•°ç»„ä¸­å‡ºçŽ°æ¬¡æ•°è¶…è¿‡ä¸€åŠçš„æ•°å­—
+*  ç®—æ³•: åˆ©ç”¨æŠ˜åŠæ–¹æ³•å¯ä»¥å®žçŽ°,ä½†è¿™é‡Œä½¿ç”¨å¦å¤–ä¸€ç§æ–¹å¼:
+*  æ•°ç»„ä¸­æœ‰ä¸€ä¸ªæ•°å­—å‡ºçŽ°çš„æ¬¡æ•°æ¯”å…¶ä»–æ‰€æœ‰æ•°å­—å‡ºçŽ°æ¬¡æ•°çš„å’Œè¿˜è¦å¤š,éåŽ†æ•°ç»„ä¿å­˜ä¸¤ä¸ªå€¼:
+*  1. æ•°ç»„ä¸­çš„ä¸€ä¸ªæ•°å­—;
+*  2. ä¸€ä¸ªæ˜¯æ¬¡æ•°
+*  éåŽ†æ—¶:å¦‚æžœå’Œä¿å­˜æ•°å­—ä¸€æ ·,æ¬¡æ•° + 1;ä¸åŒçš„è¯ -1;æ¬¡æ•°ä¸º0æ—¶å€™,æ›´æ¢ä¿å­˜æ•°å­—,ä¸”æ¬¡æ•°=1
+*  æœ€åŽçš„ç»“æžœ:ä¸€å®šæ˜¯æŠŠæ¬¡æ•°è®¾ç½®ä¸º1æ—¶å¯¹åº”çš„æ•°å­—
+*  æ—¶é—´å¤æ‚åº¦: o(n)
 */
 int MoreThanHalfNum(int* nums, int length)
 {
@@ -99,7 +99,7 @@ void Test_Agl()
 	const char* str = "abcc";
 	char* ch = new char[strlen(str) + 1];
 	strcpy(ch, str);
-	//ÕâÑù´«µÝÊÇ´íµÄ,Äã´«µÝÖ¸ÕëÊÇ³£Á¿ÇøµÄ
+	//è¿™æ ·ä¼ é€’æ˜¯é”™çš„,ä½ ä¼ é€’æŒ‡é’ˆæ˜¯å¸¸é‡åŒºçš„
 	//Permutation(const_cast<char*>(str));
 	Permutation(ch);
 	delete[] ch;

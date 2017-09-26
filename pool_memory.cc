@@ -1,4 +1,4 @@
-#include "pool_memory.h" 
+#include "pool_memory.h"
 
 char* PoolMemoryBase::start_free_ = nullptr;
 char* PoolMemoryBase::end_free_ = nullptr;
@@ -17,7 +17,7 @@ void* PoolMemoryBase::ReFill(size_t n)
 {
 	int nobjs = 20;
 	char* chunk = AllocateChunk(n, nobjs);
-	//½ö½ö»ñµÃÒ»¸öÇø¿é£¬Ö±½Ó·ÖÅä¸øµ÷ÓÃÕß£¬free_listÎŞĞÂ½áµã
+	//ä»…ä»…è·å¾—ä¸€ä¸ªåŒºå—ï¼Œç›´æ¥åˆ†é…ç»™è°ƒç”¨è€…ï¼Œfree_listæ— æ–°ç»“ç‚¹
 	if (nobjs == 1)
 	{
 		return chunk;
@@ -29,7 +29,7 @@ void* PoolMemoryBase::ReFill(size_t n)
 	Obj* volatile* free_list = nullptr;
 	free_list = GetFreeList(n);
 	result = reinterpret_cast<Obj*>(chunk);
-	//ÖØĞÂ²¼ÖÃfree_list£¬free_list¸÷½Úµã´®½ÓÆğÀ´
+	//é‡æ–°å¸ƒç½®free_listï¼Œfree_listå„èŠ‚ç‚¹ä¸²æ¥èµ·æ¥
 	*free_list = next_obj = reinterpret_cast<Obj*>(chunk + n);
 	for (int idx = 1;; ++idx)
 	{
@@ -48,19 +48,19 @@ void* PoolMemoryBase::ReFill(size_t n)
 	return result;
 }
 /*
-*	Âß¼­: ¼ÙÉè³ÌĞòÒ»¿ªÊ¼µÄÊ±ºò,¿Í»§ÉêÇëAllocateChunk(56,20);ÄÇÃ´¾Í»áÖ±½ÓÔÚ¶ÑÉÏÉêÇë40¸ö56bytesµÄÇø¿é;
-*   ÆäÖĞµÚ1¸ö½»³ö¹©¿Í»§¶ËÊ¹ÓÃ,ÁíÍâ19¸ö»á¹ÒÔØÔÚfree_list[6]ÉÏÃæ,ÆäËûµÄ20¸öÁô¸øÄÚ´æ³ØÊ¹ÓÃ;
-*   Èç¹û½ÓÏÂÀ´¿Í»§¶ËÓÖµ÷ÓÃAllocateChunk(32, 20)·¢ÏÖfree_list[3]ÉÏÃæ¿Õ¿ÕÈçÒ²,±ØĞëÏòÄÚ´æ³ØÒªÇóÖ§³Ö; Èç´ËÍù¸´
+*	é€»è¾‘: å‡è®¾ç¨‹åºä¸€å¼€å§‹çš„æ—¶å€™,å®¢æˆ·ç”³è¯·AllocateChunk(56,20);é‚£ä¹ˆå°±ä¼šç›´æ¥åœ¨å †ä¸Šç”³è¯·40ä¸ª56bytesçš„åŒºå—;
+*   å…¶ä¸­ç¬¬1ä¸ªäº¤å‡ºä¾›å®¢æˆ·ç«¯ä½¿ç”¨,å¦å¤–19ä¸ªä¼šæŒ‚è½½åœ¨free_list[6]ä¸Šé¢,å…¶ä»–çš„20ä¸ªç•™ç»™å†…å­˜æ± ä½¿ç”¨;
+*   å¦‚æœæ¥ä¸‹æ¥å®¢æˆ·ç«¯åˆè°ƒç”¨AllocateChunk(32, 20)å‘ç°free_list[3]ä¸Šé¢ç©ºç©ºå¦‚ä¹Ÿ,å¿…é¡»å‘å†…å­˜æ± è¦æ±‚æ”¯æŒ; å¦‚æ­¤å¾€å¤
 */
 char* PoolMemoryBase::AllocateChunk(size_t n, int& nobjs)
 {
 	char* result = nullptr;
 	size_t total_bytes = nobjs * n;
 	size_t left_bytes = end_free_ - start_free_;
-	
+
 	if (left_bytes > total_bytes)
 	{
-		//ÄÚ´æ³ØÓĞ×ã¹»µÄ¿Õ¼äÂú×ãĞèÇóÁ¿
+		//å†…å­˜æ± æœ‰è¶³å¤Ÿçš„ç©ºé—´æ»¡è¶³éœ€æ±‚é‡
 		result = start_free_;
 		start_free_ += total_bytes;
 		return result;
@@ -68,7 +68,7 @@ char* PoolMemoryBase::AllocateChunk(size_t n, int& nobjs)
 	}
 	else if (left_bytes >= n)
 	{
-		//ÄÚ´æ³ØÊ£ÏÂ¿Õ¼ä²»¹»Âú×ãÈ«²¿ĞèÇóÁ¿£¬µ«×ã¹»¹©Ó¦Ò»¸öÒÔÉÏµÄÇø¿é
+		//å†…å­˜æ± å‰©ä¸‹ç©ºé—´ä¸å¤Ÿæ»¡è¶³å…¨éƒ¨éœ€æ±‚é‡ï¼Œä½†è¶³å¤Ÿä¾›åº”ä¸€ä¸ªä»¥ä¸Šçš„åŒºå—
 		nobjs = left_bytes / n;
 		total_bytes = nobjs * n;
 		result = start_free_;
@@ -77,7 +77,7 @@ char* PoolMemoryBase::AllocateChunk(size_t n, int& nobjs)
 	}
 	else
 	{
-		//ÄÚ´æ³ØÁ¬Ò»¸öÇø¿éµÄ´óĞ¡¶¼ÎŞ·¨Ìá¹©
+		//å†…å­˜æ± è¿ä¸€ä¸ªåŒºå—çš„å¤§å°éƒ½æ— æ³•æä¾›
 		size_t bytes_to_get = 2 * total_bytes + RoundUp(heap_size_ >> 4);
 		if (left_bytes > 0)
 		{
@@ -88,7 +88,7 @@ char* PoolMemoryBase::AllocateChunk(size_t n, int& nobjs)
 		start_free_ = static_cast<char*>(::operator new(bytes_to_get));
 		if (start_free_ == nullptr)
 		{
-			//heap ¿Õ¼ä²»×ã£¬newÊ§°Ü µ÷Õûfree_list ÒÑÊÍ·Å³öËùÓĞÎ´ÓÃµÄÇø¿é
+			//heap ç©ºé—´ä¸è¶³ï¼Œnewå¤±è´¥ è°ƒæ•´free_list å·²é‡Šæ”¾å‡ºæ‰€æœ‰æœªç”¨çš„åŒºå—
 			size_t i = n;
 			for (; i <= kMaxBytes; i += kAlign)
 			{
@@ -102,15 +102,10 @@ char* PoolMemoryBase::AllocateChunk(size_t n, int& nobjs)
 					return AllocateChunk(n, nobjs);
 				}
 			}
-			
+
 		}
 		end_free_ = start_free_ + bytes_to_get;
 		heap_size_ = bytes_to_get;
 		return AllocateChunk(n, nobjs);
 	}
 }
-
-
-
-
-

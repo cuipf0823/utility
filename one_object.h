@@ -1,5 +1,5 @@
 /*
-	ÊµÏÖ¼¸ÖÖÏŞÖÆÀàÉú³É¶ÔÏóµÄÊıÁ¿
+	å®ç°å‡ ç§é™åˆ¶ç±»ç”Ÿæˆå¯¹è±¡çš„æ•°é‡
 */
 #ifndef ONE_OBJECT_H
 #define ONE_OBJECT_H
@@ -7,7 +7,7 @@
 namespace one_object
 {
 
-//·½·¨1£º Ë½ÓĞ»¯¹¹Ôì¡¢¿½±´¡¢Îö¹¹º¯Êı£¬Ìá¹©Î¨Ò»µÄ´´½¨½Ó¿Ú
+//æ–¹æ³•1ï¼š ç§æœ‰åŒ–æ„é€ ã€æ‹·è´ã€ææ„å‡½æ•°ï¼Œæä¾›å”¯ä¸€çš„åˆ›å»ºæ¥å£
 class Printer
 {
 public:
@@ -26,7 +26,7 @@ Printer& PrinterInstance()
 	return p;
 }
 
-//·½·¨2£ººÍ·½·¨1Ïà±È£¬°ÑÌá¹©µÄ´´½¨½Ó¿Ú·â×°ÔÚÀàµÄÄÚ²¿
+//æ–¹æ³•2ï¼šå’Œæ–¹æ³•1ç›¸æ¯”ï¼ŒæŠŠæä¾›çš„åˆ›å»ºæ¥å£å°è£…åœ¨ç±»çš„å†…éƒ¨
 class PrinterIn
 {
 public:
@@ -44,7 +44,7 @@ PrinterIn& PrinterIn::PrinterInstance()
 	return p;
 }
 
-//·½·¨3 ¶Ô±È·½·¨1 ¾ÍÊÇ°Ñ´´½¨½Ó¿Ú
+//æ–¹æ³•3 å¯¹æ¯”æ–¹æ³•1 å°±æ˜¯æŠŠåˆ›å»ºæ¥å£
 namespace PrintingStuff
 {
 	class Printer
@@ -66,7 +66,7 @@ namespace PrintingStuff
 	}
 }
 
-//·½·¨4£ºÏŞÖÆ´´½¨¶ÔÏóµÄ¸öÊı£¬¹ı¶àÖ±½ÓÅ×³öÒì³£ ¸Ã·½·¨²»¿ÉÈ¡
+//æ–¹æ³•4ï¼šé™åˆ¶åˆ›å»ºå¯¹è±¡çš„ä¸ªæ•°ï¼Œè¿‡å¤šç›´æ¥æŠ›å‡ºå¼‚å¸¸ è¯¥æ–¹æ³•ä¸å¯å–
 class PrinterToo
 {
 public:
@@ -94,12 +94,12 @@ size_t PrinterToo::num_objects_ = 0;
 }
 
 
-//·½·¨5£ºÓÉÓÚ·½·¨4¼Ì³Ğ£¬¹¹Ôì¶¼¿ÉÄÜ²úÉú¶ÔÏó£¬¿ÉÄÜºÍÎÒÃÇÀí½âµÄ¡°¶ÔÏóÊıÄ¿¡±²»Ò»ÖÂ ÓÅ»¯ÈçÏÂ
+//æ–¹æ³•5ï¼šç”±äºæ–¹æ³•4ç»§æ‰¿ï¼Œæ„é€ éƒ½å¯èƒ½äº§ç”Ÿå¯¹è±¡ï¼Œå¯èƒ½å’Œæˆ‘ä»¬ç†è§£çš„â€œå¯¹è±¡æ•°ç›®â€ä¸ä¸€è‡´ ä¼˜åŒ–å¦‚ä¸‹
 class PrinterMake
 {
 public:
 	class TooManyObjects(){};
-	//Î±¹¹Ôìº¯Êı
+	//ä¼ªæ„é€ å‡½æ•°
 	static PrinterMake* MakePrinter();
 	static PrinterMake* MakePrinter(const PrinterMake& rhs);
 private:
@@ -135,15 +135,15 @@ PrinterMake* PrinterMake::MakePrinter(const PrinterMake& rhs)
 	return new PrinterMake(rhs);
 }
 
-//·½·¨6£º·â×°¾ßÓĞÊµÀı¼ÆÊı¹¦ÄÜµÄ»ùÀà£»
+//æ–¹æ³•6ï¼šå°è£…å…·æœ‰å®ä¾‹è®¡æ•°åŠŸèƒ½çš„åŸºç±»ï¼›
 template<class BeingCounted>
 class Counted
 {
 public:
 	class TooManyObjects{};
 	static int ObjectCount()
-	{ 
-		return num_objects_; 
+	{
+		return num_objects_;
 	}
 protected:
 	Counted();
@@ -155,7 +155,7 @@ protected:
 private:
 	static int num_objects_;
 	static const size_t max_objects_;
-	void init();				      //±ÜÃâ¹¹Ôìº¯ÊıµÄ
+	void init();				      //é¿å…æ„é€ å‡½æ•°çš„
 };
 template<class BeingCounted>
 Counted<BeingCounted>::Counted()
@@ -177,11 +177,11 @@ void Counted<BeingCounted>::init()
 	++num_objects_;
 }
 
-//Ö±½Ó¼Ì³Ğ¼´¿ÉÓĞÊµÀı¼ÆÊı¹¦ÄÜ
+//ç›´æ¥ç»§æ‰¿å³å¯æœ‰å®ä¾‹è®¡æ•°åŠŸèƒ½
 class Printer : private Counted < Printer >
 {
 public:
-	// Î±¹¹Ôìº¯Êı
+	// ä¼ªæ„é€ å‡½æ•°
 	static Printer * makePrinter();
 	static Printer * makePrinter(const Printer& rhs);
 	~Printer();
@@ -194,5 +194,3 @@ private:
 
 
 #endif
-
-

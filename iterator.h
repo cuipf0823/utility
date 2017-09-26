@@ -35,10 +35,10 @@ public:
 	}
 private:
 	T value_;
-	ListItem* next_;   //µ¥ÏîÁ´±í
+	ListItem* next_;   //å•é¡¹é“¾è¡¨
 };
 
-//ÊµÏÖ¼òµ¥list
+//å®ç°ç®€å•list
 template <typename T>
 class List
 {
@@ -123,7 +123,7 @@ public:
 	{
 
 	}
-	//²»±ØÊµÏÖcopy ctor,operator=ÕâĞ©º¯Êı,±àÒëÆ÷Ìá¹©µÄÈ±Ê¡ĞĞÎªÒÑ¾­×ã¹»ÁË
+	//ä¸å¿…å®ç°copy ctor,operator=è¿™äº›å‡½æ•°,ç¼–è¯‘å™¨æä¾›çš„ç¼ºçœè¡Œä¸ºå·²ç»è¶³å¤Ÿäº†
 
 	T& operator*() const
 	{

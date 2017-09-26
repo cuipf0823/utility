@@ -1,8 +1,8 @@
 /*
 *	simulate stl allcoator pool
-*   1. ÉêÇëÄÚ´æÊ±ºò£¬Ìá¹©ÄÚ´æ²»×ãÊ±ºòµÄ½â¾ö·½°¸£»
-*   2. ¿¼ÂÇ¹ı¶àµÄ¡°Ğ¡ĞÍÇø¿é¡±¿ÉÄÜÔì³ÉµÄÄÚ´æËéÆ¬µÄÎÊÌâ£»
-*	3. ´óÓÚ128bytes£¬Ö±½ÓÉêÇëÊÓÎª´óĞÍÇø¿é£¬Ğ¡ÓÚ128bytesÊÓÎªĞ¡ĞÍÇø¿é£»
+*   1. ç”³è¯·å†…å­˜æ—¶å€™ï¼Œæä¾›å†…å­˜ä¸è¶³æ—¶å€™çš„è§£å†³æ–¹æ¡ˆï¼›
+*   2. è€ƒè™‘è¿‡å¤šçš„â€œå°å‹åŒºå—â€å¯èƒ½é€ æˆçš„å†…å­˜ç¢ç‰‡çš„é—®é¢˜ï¼›
+*	3. å¤§äº128bytesï¼Œç›´æ¥ç”³è¯·è§†ä¸ºå¤§å‹åŒºå—ï¼Œå°äº128bytesè§†ä¸ºå°å‹åŒºå—ï¼›
 */
 #ifndef POOL_MEMORY_H
 #define POOL_MEMORY_H
@@ -32,7 +32,7 @@ protected:
 		return ((bytes + kAlign - 1) & ~(kAlign - 1));
 	}
 	Obj* volatile* GetFreeList(size_t bytes);
-	//ÖØĞÂÌî³äfree_list
+	//é‡æ–°å¡«å……free_list
 	void* ReFill(size_t n);
 	char* AllocateChunk(size_t n, int& nobjs);
 };
@@ -85,7 +85,7 @@ public:
 };
 
 /*
-º¯Êı¶¨ÒåµÈ¼ÛÓÚ
+å‡½æ•°å®šä¹‰ç­‰ä»·äº
 template <typename T>
 T* PoolMemory<T>::Allocate(size_t n)
 */
@@ -104,12 +104,12 @@ typename PoolMemory<T>::pointer PoolMemory<T>::Allocate(size_t n)
 	}
 	else
 	{
-		//ÉêÇëĞ¡Çø¿é
+		//ç”³è¯·å°åŒºå—
 		Obj* volatile* free_list = GetFreeList(bytes);
 		Obj* result = *free_list;
 		if (result == nullptr)
 		{
-			//ÎŞ¿ÉÓÃµÄfree_list ÖØĞÂÌî³äfree_list
+			//æ— å¯ç”¨çš„free_list é‡æ–°å¡«å……free_list
 			ret = static_cast<T*>(ReFill(RoundUp(bytes)));
 		}
 		else

@@ -57,7 +57,7 @@ public:
 		mutex_.Unlock();
 	}
 private:
-	MutexLock& mutex_; 
+	MutexLock& mutex_;
 };
 
 /*
@@ -437,7 +437,7 @@ namespace utility_test
 		foo("temporary");
 		bar("temporary");
 		String s4 = baz();
-		if (s1 == s2)	
+		if (s1 == s2)
 		{
 		}
 		std::cout << s1 + s2 + s3 << std::endl;
@@ -474,5 +474,3 @@ namespace utility_test
 
 
 #endif
-
-
