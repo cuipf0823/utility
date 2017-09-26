@@ -1,5 +1,5 @@
 /*
-*  Ò»Ğ©ÊµÓÃµÄÀà¼¯ºÏ
+*  ä¸€äº›å®ç”¨çš„ç±»é›†åˆ
 */
 #ifndef COMMON_UTILITY_H
 #define COMMON_UTILITY_H
@@ -14,7 +14,7 @@
 #include <initializer_list>
 #include <boost/noncopyable.hpp>
 
-//Ïß³ÌËø
+//çº¿ç¨‹é”
 class MutexLock : boost::noncopyable
 {
 public:
@@ -61,7 +61,7 @@ private:
 };
 
 /*
-* Ìõ¼ş±äÁ¿
+* æ¡ä»¶å˜é‡
 */
 class Condition : boost::noncopyable
 {
@@ -92,22 +92,22 @@ private:
 	MutexLock& mutex_;
 };
 
-//ÊµÏÖ×Ô¼ºµÄstringÀà
+//å®ç°è‡ªå·±çš„stringç±»
 class String
 {
 public:
-	//string²¢Ã»ÓĞÏŞÖÆ²»ÄÜ±»¼Ì³Ğ£¬ËùÒÔ×îºÃÊ¹ÓÃĞéÎö¹¹
+	//stringå¹¶æ²¡æœ‰é™åˆ¶ä¸èƒ½è¢«ç»§æ‰¿ï¼Œæ‰€ä»¥æœ€å¥½ä½¿ç”¨è™šææ„
 	~String();
-	//¹¹Ôìº¯Êı
+	//æ„é€ å‡½æ•°
 	String();
 	String(const char* s);
 	String(const char* s, size_t n);
-	//¿½±´¹¹Ôìº¯Êı
+	//æ‹·è´æ„é€ å‡½æ•°
 	String(const String& str);
-	//¸³Öµ¹¹Ôìº¯Êı
+	//èµ‹å€¼æ„é€ å‡½æ•°
 	String& operator=(const String& rhs);
 
-	//ÔËËã·ûÖØÔØ
+	//è¿ç®—ç¬¦é‡è½½
 	char& operator[](size_t index);
 	const char& operator[](size_t index) const;
 	String& operator+=(const String& rhs);
@@ -129,14 +129,14 @@ private:
 	size_t size_;
 };
 
-//¹¹Ôìº¯Êı ¶ÔÓÚ³õÊ¼»¯Îª¿ÕµÄ¹¹Ôìº¯Êı£¬ÉêÇëÒ»¸öÔªËØ£¬ÏÂÃæº¯ÊıÖĞ¾Í²»ĞèÒªÅĞnull
+//æ„é€ å‡½æ•° å¯¹äºåˆå§‹åŒ–ä¸ºç©ºçš„æ„é€ å‡½æ•°ï¼Œç”³è¯·ä¸€ä¸ªå…ƒç´ ï¼Œä¸‹é¢å‡½æ•°ä¸­å°±ä¸éœ€è¦åˆ¤null
 String::String() :data_(new char[1]), size_(0)
 {
 	assert(data_ != nullptr);
 	*data_ = '\0';
 }
 
-//Îö¹¹º¯Êı
+//ææ„å‡½æ•°
 String::~String()
 {
 	delete [] data_;
@@ -144,7 +144,7 @@ String::~String()
 	size_ = 0;
 }
 
-//¹¹Ôìº¯Êı
+//æ„é€ å‡½æ•°
 String::String(const char* s)
 {
 	if (s != nullptr)
@@ -152,7 +152,7 @@ String::String(const char* s)
 		size_ = strlen(s);
 		data_ = new char[strlen(s) + 1];
 		assert(data_ != nullptr);
-		//strcpy ¸´ÖÆµÄ×Ö·û´®°üº¬'\0'
+		//strcpy å¤åˆ¶çš„å­—ç¬¦ä¸²åŒ…å«'\0'
 		strcpy(data_, s);
 	}
 	else
@@ -164,7 +164,7 @@ String::String(const char* s)
 	}
 }
 
-//¹¹Ôìº¯Êı
+//æ„é€ å‡½æ•°
 String::String(const char* s, size_t n)
 {
 	if (n > 0)
@@ -183,7 +183,7 @@ String::String(const char* s, size_t n)
 	}
 }
 
-//¿½±´¹¹Ôìº¯Êı
+//æ‹·è´æ„é€ å‡½æ•°
 String::String(const String& str)
 {
 	if (str.size() > 0)
@@ -204,11 +204,11 @@ String::String(const String& str)
 }
 
 /*
-* ¸³ÖµÔËËã·û
-* 1. ·µ»ØÖµÎªÀàĞÍµÄÒıÓÃ£¬Ö»ÓĞ·µ»ØÀàĞÍµÄÒıÓÃ²Å¿ÉÒÔÔÊĞíÁ¬ĞøµÄ¸³Öµ
-* 2. ²ÎÊıÎª³£Á¿ÒıÓÃÀàĞÍ
-* 3. ÊÇ·ñÊÍ·Å×Ô¼ºÄÚ´æ£»
-* 4. ÊÇ·ñÅĞ¶Ï´«µİ²ÎÊıºÍ×ÔÉíµÄ±È½Ï
+* èµ‹å€¼è¿ç®—ç¬¦
+* 1. è¿”å›å€¼ä¸ºç±»å‹çš„å¼•ç”¨ï¼Œåªæœ‰è¿”å›ç±»å‹çš„å¼•ç”¨æ‰å¯ä»¥å…è®¸è¿ç»­çš„èµ‹å€¼
+* 2. å‚æ•°ä¸ºå¸¸é‡å¼•ç”¨ç±»å‹
+* 3. æ˜¯å¦é‡Šæ”¾è‡ªå·±å†…å­˜ï¼›
+* 4. æ˜¯å¦åˆ¤æ–­ä¼ é€’å‚æ•°å’Œè‡ªèº«çš„æ¯”è¾ƒ
 */
 String& String::operator=(const String& rhs)
 {
@@ -228,7 +228,7 @@ String& String::operator=(const String& rhs)
 
 
 /*
-* ÎŞĞè¼ì²âindexÓĞĞ§ĞÔ£¬indexÓĞĞ§ĞÔĞëÓÉÍâ²¿±£Ö¤
+* æ— éœ€æ£€æµ‹indexæœ‰æ•ˆæ€§ï¼Œindexæœ‰æ•ˆæ€§é¡»ç”±å¤–éƒ¨ä¿è¯
 */
 char& String::operator[](size_t index)
 {
@@ -236,7 +236,7 @@ char& String::operator[](size_t index)
     return data_[index];
 }
 
-//³£Á¿¶ÔÏóµ÷ÓÃ¸Ãº¯Êı
+//å¸¸é‡å¯¹è±¡è°ƒç”¨è¯¥å‡½æ•°
 const char& String::operator[](size_t index) const
 {
 	assert(index < size_ - 1);
@@ -251,7 +251,7 @@ String& String::operator+=(const String& rhs)
 		char* temp = new char[length + 1];
 		assert(temp != nullptr);
 		strcpy(temp, data_);
-		//¿ÉÒÔÊ¹ÓÃstrcat
+		//å¯ä»¥ä½¿ç”¨strcat
 		strcpy(temp + size_, rhs.c_str());
 
 		delete [] data_;
@@ -263,10 +263,10 @@ String& String::operator+=(const String& rhs)
 
 
 /************************************************************************/
-//ÎŞĞèÖØÔØÎªÀàµÄ³ÉÔ±º¯Êı£¬»òÕßËµ¸üÓ¦¸ÃÊÇ·Ç³ÉÔ±º¯Êı
+//æ— éœ€é‡è½½ä¸ºç±»çš„æˆå‘˜å‡½æ•°ï¼Œæˆ–è€…è¯´æ›´åº”è¯¥æ˜¯éæˆå‘˜å‡½æ•°
 
 /*
-* ÔËËã·ûÖØÔØ
+* è¿ç®—ç¬¦é‡è½½
 */
 String operator+(const String& lhs, const String &rhs)
 {
@@ -274,15 +274,15 @@ String operator+(const String& lhs, const String &rhs)
 	char* temp = new char[length + 1];
 	assert(temp != nullptr);
 	strcpy(temp, lhs.c_str());
-	//¿ÉÒÔÊ¹ÓÃstrcat
+	//å¯ä»¥ä½¿ç”¨strcat
 	strcpy(temp + lhs.size(), rhs.c_str());
 	return String(temp, length);
 }
 
 /*
-* Êä³öÔËËã·ûÖØÔØ
-* 1. ĞÎ²ÎÒ»ĞèÒªÏòÆäĞ´ÈëÄÚÈİ£¬ÓÖÒòÎªÎÒÃÇÎŞ·¨¸´ÖÆÒ»¸öostream¶ÔÏó£¬ËùÒÔÎª·Ç³£Á¿ÒıÓÃ£»
-* 2. Êä³öÔËËã·û¾¡Á¿µÄ¼õÉÙ¸ñÊ½»¯²Ù×÷£»
+* è¾“å‡ºè¿ç®—ç¬¦é‡è½½
+* 1. å½¢å‚ä¸€éœ€è¦å‘å…¶å†™å…¥å†…å®¹ï¼Œåˆå› ä¸ºæˆ‘ä»¬æ— æ³•å¤åˆ¶ä¸€ä¸ªostreamå¯¹è±¡ï¼Œæ‰€ä»¥ä¸ºéå¸¸é‡å¼•ç”¨ï¼›
+* 2. è¾“å‡ºè¿ç®—ç¬¦å°½é‡çš„å‡å°‘æ ¼å¼åŒ–æ“ä½œï¼›
 */
 std::ostream& operator <<(std::ostream& os, const String& str)
 {
@@ -291,7 +291,7 @@ std::ostream& operator <<(std::ostream& os, const String& str)
 }
 
 /*
-*  ÊäÈëÔËËã·ûÖØÔØ
+*  è¾“å…¥è¿ç®—ç¬¦é‡è½½
 */
 std::istream& operator>>(std::istream& is, String& str)
 {
@@ -306,13 +306,13 @@ std::istream& operator>>(std::istream& is, String& str)
 	}
 	else
 	{
-		//ÊäÈëÊ§°Ü¸³ÖµÎª¿Õ
+		//è¾“å…¥å¤±è´¥èµ‹å€¼ä¸ºç©º
 		str = String();
 	}
 	return is;
 }
 
-//¹ØÏµÔËËã·ûÖØÔØ
+//å…³ç³»è¿ç®—ç¬¦é‡è½½
 bool operator==(const String& lhs, const String& rhs)
 {
 	if (lhs.size() != rhs.size())
@@ -329,7 +329,7 @@ bool operator!=(const String& lhs, const String& rhs)
 
 
 /*
- * ÏÂÃæµÄÀàÖ÷ÒªÓÃÓÚ²âÊÔÆäËû¼¸ÖÖ²Ù×÷·ûµÄÖØÔØ
+ * ä¸‹é¢çš„ç±»ä¸»è¦ç”¨äºæµ‹è¯•å…¶ä»–å‡ ç§æ“ä½œç¬¦çš„é‡è½½
  */
 
 class DInt
@@ -339,7 +339,7 @@ public:
 	{
 
 	}
-	//prefix increment Èç¹ûÏëÒª×èÖ¹++++iÕâÖÖĞĞÎª¾Í·µ»Øconst DInt& ¼´¿É
+	//prefix increment å¦‚æœæƒ³è¦é˜»æ­¢++++iè¿™ç§è¡Œä¸ºå°±è¿”å›const DInt& å³å¯
 	DInt& operator++()
 	{
 		++(this->imem_);
@@ -353,7 +353,7 @@ public:
 		return *this;
 	}
 
-	//postfix increment Èç¹ûÏëÒª×èÖ¹i++++ÕâÖÖĞĞÎª¾Í·µ»Øconst DInt ¼´¿É
+	//postfix increment å¦‚æœæƒ³è¦é˜»æ­¢i++++è¿™ç§è¡Œä¸ºå°±è¿”å›const DInt å³å¯
     DInt operator++(int)
     {
         DInt temp = *this;
@@ -429,8 +429,8 @@ namespace utility_test
 		String s0;
 		String s1("hello");
 		String s2(s0);
-		String s3 = s1;	 //¿½±´¹¹Ôìº¯Êı
-		s2 = s1;		 // ¸³Öµ¹¹Ôìº¯Êı
+		String s3 = s1;	 //æ‹·è´æ„é€ å‡½æ•°
+		s2 = s1;		 // èµ‹å€¼æ„é€ å‡½æ•°
 
 		foo(s1);
 		bar(s1);
